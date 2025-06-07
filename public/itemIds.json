@@ -3679,70 +3679,6 @@
     "origin": { "t": "", "p": "", "g": "" }
   },
   {
-    "itemId": "6a2ae19f-bf22-492c-b329-fd2626899e18",
-    "baseItemId": "Special",
-    "displayName": "Special",
-    "tags": ["special", "item", "unique"],
-    "primaryVanityId": 0,
-    "secondaryVanityId": 0,
-    "amount": 50,
-    "durability": -1,
-    "modData": { "m": [] },
-    "rolledPerks": [],
-    "insurance": "",
-    "insuranceOwnerPlayfabId": "",
-    "insuredAttachmentId": "",
-    "origin": { "t": "", "p": "", "g": "" }
-  },
-  {
-    "itemId": "03c37975-7c7f-4ef5-a988-fcdfcf0cae49",
-    "baseItemId": "Special",
-    "displayName": "Special",
-    "tags": ["special", "item", "unique"],
-    "primaryVanityId": 0,
-    "secondaryVanityId": 0,
-    "amount": 50,
-    "durability": -1,
-    "modData": { "m": [] },
-    "rolledPerks": [],
-    "insurance": "",
-    "insuranceOwnerPlayfabId": "",
-    "insuredAttachmentId": "",
-    "origin": { "t": "", "p": "", "g": "" }
-  },
-  {
-    "itemId": "de99016b-6ef1-462b-99b3-9ead8f8df078",
-    "baseItemId": "Special",
-    "displayName": "Special",
-    "tags": ["special", "item", "unique"],
-    "primaryVanityId": 0,
-    "secondaryVanityId": 0,
-    "amount": 50,
-    "durability": -1,
-    "modData": { "m": [] },
-    "rolledPerks": [],
-    "insurance": "",
-    "insuranceOwnerPlayfabId": "",
-    "insuredAttachmentId": "",
-    "origin": { "t": "", "p": "", "g": "" }
-  },
-  {
-    "itemId": "ce7d9714-f5e5-491d-a8b5-6aa341fe242c",
-    "baseItemId": "Special",
-    "displayName": "Special",
-    "tags": ["special", "item", "unique"],
-    "primaryVanityId": 0,
-    "secondaryVanityId": 0,
-    "amount": 50,
-    "durability": -1,
-    "modData": { "m": [] },
-    "rolledPerks": [],
-    "insurance": "",
-    "insuranceOwnerPlayfabId": "",
-    "insuredAttachmentId": "",
-    "origin": { "t": "", "p": "", "g": "" }
-  },
-  {
     "itemId": "b3d3e0ae-1b0e-4537-bd95-4ffe8ea35e6c",
     "baseItemId": "Helmet_Altered_03",
     "displayName": "Helmet_Altered_03",
@@ -7113,5 +7049,9 @@
     "insuranceOwnerPlayfabId": "",
     "insuredAttachmentId": "",
     "origin": { "t": "", "p": "", "g": "" }
-  }
+  },
+  { "baseItemId": "Light" },
+  { "baseItemId": "Medium" },
+  { "baseItemId": "Heavy" },
+  { "baseItemId": "Shotgun" }
 ]

@@ -123,12 +123,12 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 30px;
-            padding: 20px;
+            padding: 20px 30px;
             background: rgba(20, 25, 40, 0.8);
             border-radius: 10px;
             border: 1px solid #4a5568;
             position: sticky;
-            top: 0;
+            top: 20px;
             z-index: 100;
             backdrop-filter: blur(10px);
         }
@@ -141,7 +141,25 @@
 
         .header-buttons {
             display: flex;
-            gap: 15px;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .header-buttons .btn {
+            padding: 6px 10px;
+            font-size: 0.75em;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            white-space: nowrap;
+            min-width: auto;
+        }
+
+        .header-buttons .btn svg {
+            width: 14px;
+            height: 14px;
+            flex-shrink: 0;
         }
 
         .btn {
@@ -668,11 +686,12 @@
         .auto-save-indicator {
             background: rgba(76, 175, 80, 0.8);
             color: white;
-            padding: 5px 10px;
+            padding: 4px 8px;
             border-radius: 4px;
-            font-size: 0.8em;
+            font-size: 0.7em;
             opacity: 0;
             transition: opacity 0.3s ease;
+            white-space: nowrap;
         }
 
         .auto-save-indicator.show {
@@ -701,6 +720,53 @@
 
         .item-detail-icon.error::before {
             content: "No Image";
+        }
+
+        .github-link {
+            color: #a0aec0;
+            transition: all 0.3s ease;
+            padding: 6px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            flex-shrink: 0;
+        }
+
+        .github-link:hover {
+            color: #64ffda;
+            background: rgba(100, 255, 218, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .github-link svg {
+            width: 24px;
+            height: 24px;
+        }
+        
+        .reload-btn {
+            color: #a0aec0;
+            background: none;
+            border: none;
+            transition: all 0.3s ease;
+            padding: 8px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .reload-btn:hover {
+            color: #64ffda;
+            background: rgba(100, 255, 218, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .reload-btn svg {
+            width: 20px;
+            height: 20px;
         }
     </style>
 </head>
@@ -735,6 +801,16 @@
                 <h1>The Cycle: Reborn - Save Editor</h1>
                 <div class="header-buttons">
                     <div class="auto-save-indicator" id="auto-save-indicator">Auto-saved!</div>
+                    <button class="reload-btn" id="reload-all" title="Reload Inventory & Configs">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/>
+                        </svg>
+                    </button>
+                    <a href="https://github.com/lxjo101" target="_blank" class="github-link" title="Visit GitHub Profile">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                        </svg>
+                    </a>
                 </div>
             </div>
 
@@ -767,6 +843,21 @@
             <span class="close">&times;</span>
             <div class="item-detail-modal" id="modal-item-details">
                 <!-- Item details will be populated here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div id="confirm-modal" class="modal">
+        <div class="modal-content" style="max-width: 400px;">
+            <span class="close" id="confirm-close">&times;</span>
+            <div style="text-align: center;">
+                <h2 style="color: #ff6b6b; margin-bottom: 20px;">Confirm Deletion</h2>
+                <p id="confirm-message" style="margin-bottom: 30px; color: #e0e0e0;"></p>
+                <div style="display: flex; gap: 15px; justify-content: center;">
+                    <button class="btn btn-danger" id="confirm-yes">Yes, Delete</button>
+                    <button class="btn btn-primary" id="confirm-no">Cancel</button>
+                </div>
             </div>
         </div>
     </div>
@@ -888,6 +979,9 @@
                         this.closeModal();
                     }
                 });
+                
+                document.getElementById('reload-all').addEventListener('click', () => this.reloadAll());
+
             }
 
             async connectToDatabase() {
@@ -997,6 +1091,21 @@
                 }
             }
 
+            async reloadAll() {
+                this.updateStatus('Reloading all data...');
+                try {
+                    await this.loadItemConfigs();
+                    await this.loadAvailableItems();
+                    await this.loadInventory();
+                    this.filterAvailableItems();
+                    this.renderInventory();
+                    this.updateStatus('All data reloaded successfully');
+                } catch (error) {
+                    console.error('Error reloading data:', error);
+                    this.updateStatus('Failed to reload data');
+                }
+            }
+
             autoSave() {
                 if (this.autoSaveTimeout) {
                     clearTimeout(this.autoSaveTimeout);
@@ -1082,9 +1191,11 @@
                 container.innerHTML = '';
 
                 let filteredItems = this.availableItems.filter(item => {
-                    // Only show items that have configs defined
-                    if (!this.itemConfigs[item.baseItemId]) return false;
-
+                    // Only show items that exist in itemConfigs
+                    if (!this.itemConfigs[item.baseItemId]) {
+                        return false;
+                    }
+                    
                     const config = this.getItemConfig(item.baseItemId);
                     const matchesCategory = this.selectedCategory === 'all' || config.category === this.selectedCategory;
                     const matchesSearch = !this.currentFilter || 
@@ -1282,23 +1393,25 @@
                 if (this.inventory[index]) {
                     const item = this.inventory[index];
                     const config = this.getItemConfig(item.baseItemId);
-                    if (confirm(`Remove ${item.amount || 1}x ${config.displayName} from inventory?`)) {
+                    const message = `Remove ${item.amount || 1}x ${config.displayName} from inventory?`;
+
+                    this.showConfirmModal(message, () => {
                         this.inventory.splice(index, 1);
                         this.renderInventory();
                         this.closeModal();
                         this.autoSave();
                         this.updateStatus(`Removed ${config.displayName} from inventory`);
-                    }
+                    });
                 }
             }
 
             clearInventory() {
-                if (confirm('Are you sure you want to clear the entire inventory?')) {
+                this.showConfirmModal('Are you sure you want to clear the entire inventory?', () => {
                     this.inventory = [];
                     this.renderInventory();
                     this.autoSave();
                     this.updateStatus('Inventory cleared');
-                }
+                });
             }
 
             exportBackup() {
@@ -1344,6 +1457,40 @@
                     }
                 };
                 input.click();
+            }
+
+            showConfirmModal(message, onConfirm) {
+                const modal = document.getElementById('confirm-modal');
+                const messageEl = document.getElementById('confirm-message');
+                const yesBtn = document.getElementById('confirm-yes');
+                const noBtn = document.getElementById('confirm-no');
+                const closeBtn = document.getElementById('confirm-close');
+
+                messageEl.textContent = message;
+                modal.style.display = 'block';
+
+                // Remove old event listeners
+                const newYesBtn = yesBtn.cloneNode(true);
+                const newNoBtn = noBtn.cloneNode(true);
+                const newCloseBtn = closeBtn.cloneNode(true);
+
+                yesBtn.parentNode.replaceChild(newYesBtn, yesBtn);
+                noBtn.parentNode.replaceChild(newNoBtn, noBtn);
+                closeBtn.parentNode.replaceChild(newCloseBtn, closeBtn);
+
+                // Add new event listeners
+                newYesBtn.addEventListener('click', () => {
+                    modal.style.display = 'none';
+                    onConfirm();
+                });
+
+                newNoBtn.addEventListener('click', () => {
+                    modal.style.display = 'none';
+                });
+
+                newCloseBtn.addEventListener('click', () => {
+                    modal.style.display = 'none';
+                });
             }
 
             closeModal() {
@@ -1459,7 +1606,7 @@
                 if (id.includes('light') || id.includes('medium') || id.includes('heavy') || id.includes('shotgun') || id.includes('special')) return 250;
                 if (id.includes('veltecite') || id.includes('nickel') || id.includes('materials')) return 100;
                 if (id.includes('wp_') || id.includes('helmet') || id.includes('shield') || id.includes('bag') || id.includes('vest')) return 1;
-                return 50; // Default for other items
+                return 20; // Default for other items
             }
             
             splitStacks(inventory) {
