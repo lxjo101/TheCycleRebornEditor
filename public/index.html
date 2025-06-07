@@ -50,6 +50,12 @@
             padding: 20px;
             border-right: 2px solid #4a5568;
             backdrop-filter: blur(10px);
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            overflow-y: auto;
+            z-index: 50;
         }
 
         .sidebar h2 {
@@ -102,8 +108,9 @@
         .main-content {
             flex: 1;
             padding: 20px;
+            padding-bottom: 100px;
+            padding-left: 270px;
             overflow-y: auto;
-            max-height: 100vh;
         }
 
         /* Hide scrollbar for main content when browse items is open */
@@ -120,6 +127,10 @@
             background: rgba(20, 25, 40, 0.8);
             border-radius: 10px;
             border: 1px solid #4a5568;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
         }
 
         .header h1 {
@@ -318,12 +329,13 @@
 
         .available-items {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
             gap: 15px;
             margin-top: 20px;
-            max-height: 70vh;
+            max-height: calc(100vh - 380px);
             overflow-y: auto;
             padding-right: 10px;
+            padding-bottom: 20px;
         }
 
         /* Custom scrollbar for available items */
@@ -353,10 +365,11 @@
             cursor: pointer;
             transition: all 0.3s ease;
             display: flex;
-            align-items: center;
+            align-items: flex-start;
             gap: 15px;
             position: relative;
             overflow: hidden;
+            min-height: 80px;
         }
 
         .available-item:hover {
@@ -415,6 +428,9 @@
         .available-item-info {
             flex: 1;
             min-width: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
         }
 
         .available-item h4 {
@@ -662,6 +678,30 @@
         .auto-save-indicator.show {
             opacity: 1;
         }
+
+        /* Image loading and error handling */
+        .item-image, .available-item-icon, .item-detail-icon {
+            background-color: rgba(45, 55, 75, 0.8);
+        }
+
+        .item-image.error, .available-item-icon.error, .item-detail-icon.error {
+            background-image: none !important;
+            background-color: #4a5568;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7em;
+            color: #a0aec0;
+            text-align: center;
+        }
+
+        .item-image.error::before, .available-item-icon.error::before {
+            content: "IMG";
+        }
+
+        .item-detail-icon.error::before {
+            content: "No Image";
+        }
     </style>
 </head>
 <body>
@@ -750,6 +790,8 @@
                 this.currentFilter = '';
                 this.apiBaseUrl = '/api';
                 this.autoSaveTimeout = null;
+                this.imageCache = new Map(); // Cache for loaded images
+                this.imageErrors = new Set(); // Track failed image loads
                 
                 this.init();
                 this.bindEvents();
@@ -765,14 +807,20 @@
 
             async loadItemConfigs() {
                 try {
-                    const response = await fetch('./icons/!itemConfigs.json');
+                    // Try to load from the updated location first
+                    let response = await fetch('./itemConfigs.json');
+                    if (!response.ok) {
+                        // Fallback to original location
+                        response = await fetch('./icons/itemConfigs.json');
+                    }
+                    
                     if (response.ok) {
                         const data = await response.json();
                         this.itemConfigs = data.itemConfigs || {};
                         this.rarityColors = data.rarityColors || {};
                         console.log(`Loaded ${Object.keys(this.itemConfigs).length} item configurations`);
                     } else {
-                        console.warn('Could not load itemConfigs.json');
+                        console.warn('Could not load itemConfigs.json from any location');
                         this.createFallbackConfigs();
                     }
                 } catch (error) {
@@ -783,9 +831,9 @@
 
             createFallbackConfigs() {
                 this.itemConfigs = {
-                    "Consumable_Health_01": { displayName: "Weak Stim", category: "consumables", rarity: "common", maxDurability: -1, icon: "Weak Stim.png" },
-                    "Shield_01": { displayName: "Basic Shield", category: "armor", rarity: "common", maxDurability: 500, icon: "Basic Shields.png" },
-                    "WP_E_AR_Energy_01": { displayName: "AR-55", category: "weapons", rarity: "common", maxDurability: 1000, icon: "AR-55 Autorifle.png" }
+                    "Consumable_Health_01": { displayName: "Weak Stim", category: "consumables", rarity: "common", maxDurability: -1, icon: "WeakStim.png" },
+                    "Shield_01": { displayName: "Basic Shield", category: "armor", rarity: "common", maxDurability: 500, icon: "BasicShields.png" },
+                    "WP_E_AR_Energy_01": { displayName: "AR-55", category: "weapons", rarity: "common", maxDurability: 1000, icon: "AR-55Autorifle.png" }
                 };
                 this.rarityColors = {
                     common: "#9e9e9e",
@@ -901,9 +949,9 @@
                         const data = await response.json();
                         
                         if (Array.isArray(data)) {
-                            this.inventory = data;
+                            this.inventory = this.splitStacks(data);
                         } else if (data && Array.isArray(data.inventory)) {
-                            this.inventory = data.inventory;
+                            this.inventory = this.splitStacks(data.inventory);
                         } else {
                             console.warn('Unexpected response format:', data);
                             this.inventory = [];
@@ -922,7 +970,6 @@
                     this.generateEmptyInventory();
                 }
             }
-
             async saveInventory() {
                 if (!this.isConnected) {
                     return;
@@ -1006,17 +1053,13 @@
                         <div class="item-amount">${item.amount || 1}</div>
                     `;
                     
+                    // Handle image loading errors
+                    const itemImage = slot.querySelector('.item-image');
+                    this.handleImageLoad(itemImage, iconPath, item.baseItemId);
+                    
                     slot.addEventListener('click', () => this.showItemDetail(item, this.inventory.indexOf(item)));
                     grid.appendChild(slot);
                 });
-
-                const totalSlotsToShow = Math.max(50, filteredInventory.length + 10);
-                for (let i = filteredInventory.length; i < totalSlotsToShow; i++) {
-                    const slot = document.createElement('div');
-                    slot.className = 'item-slot empty';
-                    slot.innerHTML = '<div class="item-image placeholder">+</div>';
-                    grid.appendChild(slot);
-                }
             }
 
             toggleAvailableItems() {
@@ -1039,6 +1082,9 @@
                 container.innerHTML = '';
 
                 let filteredItems = this.availableItems.filter(item => {
+                    // Only show items that have configs defined
+                    if (!this.itemConfigs[item.baseItemId]) return false;
+
                     const config = this.getItemConfig(item.baseItemId);
                     const matchesCategory = this.selectedCategory === 'all' || config.category === this.selectedCategory;
                     const matchesSearch = !this.currentFilter || 
@@ -1058,12 +1104,17 @@
                         <div class="available-item-icon rarity-${config.rarity}" style="background-image: url('${iconPath}')"></div>
                         <div class="available-item-info">
                             <h4 class="rarity-${config.rarity}">${config.displayName}</h4>
+                            <p style="color: ${this.rarityColors[config.rarity] || '#64ffda'}; font-size: 0.7em; text-transform: uppercase; margin-top: 3px;">${config.rarity}</p>
                         </div>
                         <div class="available-item-controls">
                             <input type="number" class="quantity-input" value="1" min="1" max="999">
                             <button class="btn btn-primary">Add</button>
                         </div>
                     `;
+                    
+                    // Handle image loading errors
+                    const itemIcon = itemDiv.querySelector('.available-item-icon');
+                    this.handleImageLoad(itemIcon, iconPath, item.baseItemId);
                     
                     const addButton = itemDiv.querySelector('.btn');
                     const quantityInput = itemDiv.querySelector('.quantity-input');
@@ -1078,21 +1129,67 @@
                 });
             }
 
+            handleImageLoad(element, imagePath, itemId) {
+                if (this.imageErrors.has(imagePath)) {
+                    // Already know this image failed, mark as error immediately
+                    element.classList.add('error');
+                    element.style.backgroundImage = 'none';
+                    return;
+                }
+
+                if (this.imageCache.has(imagePath)) {
+                    // Image is cached and working
+                    return;
+                }
+
+                // Create a test image to check if it loads
+                const testImg = new Image();
+                testImg.onload = () => {
+                    this.imageCache.set(imagePath, true);
+                    // Image loaded successfully, no action needed
+                };
+                
+                testImg.onerror = () => {
+                    this.imageErrors.add(imagePath);
+                    element.classList.add('error');
+                    element.style.backgroundImage = 'none';
+                    console.warn(`Failed to load image: ${imagePath} for item: ${itemId}`);
+                };
+                
+                testImg.src = imagePath;
+            }
+
             addItemToInventory(baseItemId, quantity) {
                 const amount = parseInt(quantity) || 1;
-                
-                const existingItem = this.inventory.find(item => item.baseItemId === baseItemId);
-                
-                if (existingItem) {
-                    existingItem.amount = (existingItem.amount || 1) + amount;
-                } else {
-                    const config = this.getItemConfig(baseItemId);
+                const config = this.getItemConfig(baseItemId);
+                const maxStack = config.maxStackSize || 50;
+
+                // Try to add to existing stacks first
+                let remainingAmount = amount;
+
+                // Find existing stacks that aren't full
+                const existingStacks = this.inventory.filter(item => 
+                    item.baseItemId === baseItemId && item.amount < maxStack
+                );
+
+                for (const existingItem of existingStacks) {
+                    if (remainingAmount <= 0) break;
+
+                    const canAdd = maxStack - existingItem.amount;
+                    const toAdd = Math.min(remainingAmount, canAdd);
+                    existingItem.amount += toAdd;
+                    remainingAmount -= toAdd;
+                }
+
+                // Create new stacks for remaining amount
+                while (remainingAmount > 0) {
+                    const stackAmount = Math.min(remainingAmount, maxStack);
                     this.inventory.push({
                         itemId: this.generateUUID(),
                         baseItemId: baseItemId,
                         primaryVanityId: 0,
                         secondaryVanityId: 0,
-                        amount: amount,
+                        amount: stackAmount,
                         durability: config.maxDurability,
                         modData: { m: [] },
                         rolledPerks: [],
@@ -1101,8 +1198,9 @@
                         insuredAttachmentId: "",
                         origin: { t: "", p: "", g: "" }
                     });
+                    remainingAmount -= stackAmount;
                 }
-
+            
                 this.renderInventory();
                 this.autoSave();
                 this.updateStatus(`Added ${amount}x ${config.displayName} to inventory`);
@@ -1114,7 +1212,7 @@
                 
                 const config = this.getItemConfig(item.baseItemId);
                 const iconPath = this.getItemIcon(item.baseItemId);
-                const showDurability = config.maxDurability > 0;
+                const showDurability = config.maxDurability > 0 && config.category !== 'weapons';
                 
                 let durabilitySlider = '';
                 if (showDurability) {
@@ -1144,6 +1242,10 @@
                     </div>
                     ${durabilitySlider}
                 `;
+                
+                // Handle image loading for the modal icon
+                const detailIcon = detailsDiv.querySelector('.item-detail-icon');
+                this.handleImageLoad(detailIcon, iconPath, item.baseItemId);
                 
                 modal.style.display = 'block';
                 this.currentEditingItemIndex = index;
@@ -1253,13 +1355,14 @@
                 if (this.itemConfigs[baseItemId]) {
                     return this.itemConfigs[baseItemId];
                 }
-                
+
                 // Fallback config
                 return {
                     displayName: this.cleanDisplayName(baseItemId),
                     category: this.guessCategory(baseItemId),
                     rarity: 'common',
                     maxDurability: this.guessMaxDurability(baseItemId),
+                    maxStackSize: this.guessMaxStackSize(baseItemId),
                     icon: this.getDefaultIcon(baseItemId)
                 };
             }
@@ -1268,7 +1371,7 @@
                 const id = baseItemId.toLowerCase();
                 if (id.includes('wp_')) return 'weapons';
                 if (id.includes('consumable')) return 'consumables';
-                if (id.includes('shield') || id.includes('helmet') || id.includes('bag')) return 'armor';
+                if (id.includes('shield') || id.includes('helmet') || id.includes('bag') || id.includes('vest')) return 'armor';
                 if (id.includes('light') || id.includes('medium') || id.includes('heavy') || id.includes('shotgun') || id.includes('special')) return 'ammo';
                 if (id.includes('tool') || id.includes('scanner')) return 'tools';
                 if (id.includes('mod_')) return 'attachments';
@@ -1280,6 +1383,7 @@
                 if (id.includes('wp_')) return 1000;
                 if (id.includes('helmet')) return 600;
                 if (id.includes('shield')) return 500;
+                if (id.includes('vest')) return 400;
                 if (id.includes('tool')) return 500;
                 return -1;
             }
@@ -1295,9 +1399,22 @@
 
             getItemIcon(baseItemId) {
                 const config = this.getItemConfig(baseItemId);
+                
+                // If we have a specific icon path from config, use it
                 if (config.icon && config.icon !== this.getDefaultIcon(baseItemId)) {
-                    return `./public/icons/${config.icon}`;
+                    // Try multiple possible paths for the icons
+                    const possiblePaths = [
+                        `./icons/${config.icon}`,
+                        `./public/icons/${config.icon}`,
+                        `./${config.icon}`,
+                        `./assets/${config.icon}`
+                    ];
+                    
+                    // For now, return the first path and let error handling deal with failures
+                    return possiblePaths[0];
                 }
+                
+                // Use fallback placeholder
                 return this.createPlaceholderIcon(baseItemId);
             }
 
@@ -1309,8 +1426,11 @@
                 return `data:image/svg+xml;base64,${btoa(`
                     <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 60 60">
                         <rect width="60" height="60" fill="#4a5568"/>
-                        <text x="30" y="35" text-anchor="middle" fill="#e0e0e0" font-family="Arial" font-size="8">
-                            ${baseItemId.substring(0, 8)}
+                        <text x="30" y="30" text-anchor="middle" fill="#e0e0e0" font-family="Arial" font-size="6">
+                            ${baseItemId.substring(0, 10)}
+                        </text>
+                        <text x="30" y="42" text-anchor="middle" fill="#a0aec0" font-family="Arial" font-size="5">
+                            ${baseItemId.substring(10, 20)}
                         </text>
                     </svg>
                 `)}`;
@@ -1329,6 +1449,46 @@
                 console.log(message);
             }
 
+            guessMaxStackSize(baseItemId) {
+                const id = baseItemId.toLowerCase();
+
+                // Special cases for unlimited stacking
+                if (id.includes('oldcurrency') || id.includes('old_currency')) return 999999;
+
+                if (id.includes('consumable') || id.includes('grenade')) return 5;
+                if (id.includes('light') || id.includes('medium') || id.includes('heavy') || id.includes('shotgun') || id.includes('special')) return 250;
+                if (id.includes('veltecite') || id.includes('nickel') || id.includes('materials')) return 100;
+                if (id.includes('wp_') || id.includes('helmet') || id.includes('shield') || id.includes('bag') || id.includes('vest')) return 1;
+                return 50; // Default for other items
+            }
+            
+            splitStacks(inventory) {
+                const newInventory = [];
+                        
+                inventory.forEach(item => {
+                    const config = this.getItemConfig(item.baseItemId);
+                    const maxStack = config.maxStackSize || 50;
+                    
+                    if (item.amount <= maxStack) {
+                        newInventory.push(item);
+                    } else {
+                        // Split into multiple stacks
+                        let remainingAmount = item.amount;
+                        while (remainingAmount > 0) {
+                            const stackAmount = Math.min(remainingAmount, maxStack);
+                            newInventory.push({
+                                ...item,
+                                itemId: this.generateUUID(),
+                                amount: stackAmount
+                            });
+                            remainingAmount -= stackAmount;
+                        }
+                    }
+                });
+                
+                return newInventory;
+            }
+            
             updateConnectionStatus(connected) {
                 const indicator = document.getElementById('connection-indicator');
                 const text = document.getElementById('connection-text');

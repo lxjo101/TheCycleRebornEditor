@@ -5,6 +5,7 @@
       "category": "consumables",
       "rarity": "common",
       "maxDurability": -1,
+      "maxStackSize": 5,
       "icon": "WeakStim.png"
     },
     "Consumable_Health_02": {
@@ -33,84 +34,84 @@
       "category": "consumables",
       "rarity": "rare",
       "maxDurability": -1,
-      "icon": "Combat Medkit.png"
+      "icon": "CombatMedkit.png"
     },
     "Consumable_Health_06": {
       "displayName": "Combat Stim",
       "category": "consumables",
       "rarity": "rare",
       "maxDurability": -1,
-      "icon": "Combat Stim.png"
+      "icon": "CombatStim.png"
     },
     "Consumable_SmokeGrenade_01": {
       "displayName": "Smoke Grenade",
       "category": "consumables",
       "rarity": "uncommon",
       "maxDurability": -1,
-      "icon": "Smoke Grenade.png"
+      "icon": "SmokeGrenade.png"
     },
     "Consumable_GasGrenade_01": {
       "displayName": "Gas Grenade",
       "category": "consumables",
       "rarity": "uncommon",
       "maxDurability": -1,
-      "icon": "Gas Grenade.png"
+      "icon": "GasGrenade.png"
     },
     "ConsumableAudioDecoy_01": {
       "displayName": "Audio Decoy",
       "category": "consumables",
       "rarity": "uncommon",
       "maxDurability": -1,
-      "icon": "Audio Decoy.png"
+      "icon": "AudioDecoy.png"
     },
     "OTecStim_Adrenaline": {
       "displayName": "Adrenaline Stim",
       "category": "consumables",
       "rarity": "rare",
       "maxDurability": -1,
-      "icon": "Strong Stim.png"
+      "icon": "StrongStim.png"
     },
     "KineticShield": {
       "displayName": "Kinetic Shield",
       "category": "consumables",
       "rarity": "epic",
       "maxDurability": -1,
-      "icon": "Enhanced Shields.png"
+      "icon": "EnhancedShields.png"
     },
     "Cloak": {
       "displayName": "Personal Cloak",
       "category": "consumables",
       "rarity": "epic",
       "maxDurability": -1,
-      "icon": "Enhanced Shields.png"
+      "icon": "EnhancedShields.png"
     },
     "KineticShieldDome": {
       "displayName": "Kinetic Shield Dome",
       "category": "consumables",
       "rarity": "legendary",
       "maxDurability": -1,
-      "icon": "Enhanced Shields.png"
+      "icon": "EnhancedShields.png"
     },
     "HealingWard": {
       "displayName": "Healing Ward",
       "category": "consumables",
       "rarity": "epic",
       "maxDurability": -1,
-      "icon": "Combat Medkit.png"
+      "icon": "CombatMedkit.png"
     },
     "Consumable_Shield_01": {
       "displayName": "Shield Stim",
       "category": "consumables",
       "rarity": "uncommon",
       "maxDurability": -1,
-      "icon": "Strong Stim.png"
+      "icon": "StrongStim.png"
     },
     "Consumable_Stamina_01": {
       "displayName": "Stamina Stim",
       "category": "consumables",
       "rarity": "uncommon",
       "maxDurability": -1,
-      "icon": "Strong Stim.png"
+      "icon": "StrongStim.png"
     },
     "Consumable_RoadFlare": {
       "displayName": "Road Flare",
@@ -124,630 +125,630 @@
       "category": "consumables",
       "rarity": "legendary",
       "maxDurability": -1,
-      "icon": "Assault Grenade.png"
+      "icon": "AssaultGrenade.png"
     },
     "ShockGrenade_01": {
       "displayName": "Shock Grenade I",
       "category": "consumables",
       "rarity": "common",
       "maxDurability": -1,
-      "icon": "Standard Grenade.png"
+      "icon": "StandardGrenade.png"
     },
     "ShockGrenade_02": {
       "displayName": "Shock Grenade II",
       "category": "consumables",
       "rarity": "uncommon",
       "maxDurability": -1,
-      "icon": "Standard Grenade.png"
+      "icon": "StandardGrenade.png"
     },
     "ShockGrenade_03": {
       "displayName": "Shock Grenade III",
       "category": "consumables",
       "rarity": "rare",
       "maxDurability": -1,
-      "icon": "Standard Grenade.png"
+      "icon": "StandardGrenade.png"
     },
     "ShockGrenade_04": {
       "displayName": "Shock Grenade IV",
       "category": "consumables",
       "rarity": "epic",
       "maxDurability": -1,
-      "icon": "Standard Grenade.png"
+      "icon": "StandardGrenade.png"
     },
     "ShockGrenade_05": {
       "displayName": "Shock Grenade V",
       "category": "consumables",
       "rarity": "legendary",
       "maxDurability": -1,
-      "icon": "Standard Grenade.png"
+      "icon": "StandardGrenade.png"
     },
     "WP_D_Pistol_Bullet_01": {
       "displayName": "Bulldog Pistol",
       "category": "weapons",
       "rarity": "rare",
       "maxDurability": 1000,
-      "icon": "bulldog.png"
+      "icon": "Bulldog.png"
     },
     "WP_G_Pistol_Energy_01": {
       "displayName": "Scarab Pistol",
       "category": "weapons",
       "rarity": "epic",
       "maxDurability": 1100,
-      "icon": "scarab.png"
+      "icon": "Scarab.png"
     },
     "WP_G_AR_Needle_01": {
       "displayName": "Manticore",
       "category": "weapons",
       "rarity": "uncommon",
       "maxDurability": 1000,
-      "icon": "manticore.png"
+      "icon": "Manticore.png"
     },
     "WP_A_SMG_Shard_01": {
       "displayName": "KM-9 Scrapper",
       "category": "weapons",
       "rarity": "uncommon",
       "maxDurability": 1000,
-      "icon": "scrapper.png"
+      "icon": "KM-9'Scrapper'.png"
     },
     "WP_E_Pistol_Bullet_01": {
       "displayName": "K-28 Pistol",
       "category": "weapons",
       "rarity": "common",
       "maxDurability": 800,
-      "icon": "k28.png"
+      "icon": "K-28.png"
     },
     "WP_E_SGun_Bullet_01": {
       "displayName": "B9 Trenchgun",
       "category": "weapons",
       "rarity": "common",
       "maxDurability": 800,
-      "icon": "trenchgun.png"
+      "icon": "B9Trenchgun.png"
     },
     "WP_E_SMG_Bullet_01": {
       "displayName": "S-576 PDW",
       "category": "weapons",
       "rarity": "common",
       "maxDurability": 900,
-      "icon": "pdw.png"
+      "icon": "S-576PDW.png"
     },
     "WP_E_AR_Energy_01": {
       "displayName": "AR-55 Autorifle",
       "category": "weapons",
       "rarity": "common",
       "maxDurability": 1000,
-      "icon": "ar55.png"
+      "icon": "AR-55Autorifle.png"
     },
     "WP_E_Sniper_Bullet_01": {
       "displayName": "C-32 Bolt Action",
       "category": "weapons",
       "rarity": "common",
       "maxDurability": 1000,
-      "icon": "c-32boltaction.png"
+      "icon": "C-32BoltAction.png"
     },
     "WP_E_Pistol_Bullet_01_scrappy": {
       "displayName": "Rusty K-28",
       "category": "weapons",
       "rarity": "common",
       "maxDurability": 400,
-      "icon": "rustyK28.png"
+      "icon": "RustyK-28.png"
     },
     "WP_E_SGun_Bullet_01_scrappy": {
       "displayName": "Rusty Trenchgun",
       "category": "weapons",
       "rarity": "common",
       "maxDurability": 400,
-      "icon": "rustytrench.png"
+      "icon": "RustyB9Trenchgun.png"
     },
     "WP_E_SMG_Bullet_01_scrappy": {
       "displayName": "Rusty PDW",
       "category": "weapons",
       "rarity": "common",
       "maxDurability": 450,
-      "icon": "rustypdw.png"
+      "icon": "RustyS-576PDW.png"
     },
     "WP_E_AR_Energy_01_scrappy": {
       "displayName": "Rusty AR-55",
       "category": "weapons",
       "rarity": "common",
       "maxDurability": 500,
-      "icon": "rustyar55.png"
+      "icon": "RustyAR-55Autorifle.png"
     },
     "WP_Legendary_Sniper_Energy_01": {
       "displayName": "Phasic Lancer",
       "category": "weapons",
       "rarity": "epic",
       "maxDurability": 1400,
-      "icon": "phasicLancer.png"
+      "icon": "PhasicLancer.png"
     },
     "WP_E_Launch_Nade_01": {
       "displayName": "FF4 Detonator",
       "category": "weapons",
       "rarity": "rare",
       "maxDurability": 1200,
-      "icon": "ff4Detonator.png"
+      "icon": "FF4Detonator.png"
     },
     "WP_A_Launch_MSL_01": {
       "displayName": "KOMRAD",
       "category": "weapons",
       "rarity": "epic",
       "maxDurability": 1500,
-      "icon": "komrad.png"
+      "icon": "KOMRAD.png"
     },
     "WP_A_Sniper_Gauss_01": {
       "displayName": "KARMA-1",
       "category": "weapons",
       "rarity": "legendary",
       "maxDurability": 1500,
-      "icon": "karma.png"
+      "icon": "KARMA-1.png"
     },
     "WP_A_HVY_Shell_01": {
       "displayName": "KARLA Heavy Gun",
       "category": "weapons",
       "rarity": "legendary",
       "maxDurability": 1800,
-      "icon": "karla.png"
+      "icon": "KARLA.png"
     },
     "WP_D_HVY_Exotic_01": {
       "displayName": "HAZE Launcher",
       "category": "weapons",
       "rarity": "legendary",
       "maxDurability": 1700,
-      "icon": "haze.png"
+      "icon": "HAZELauncher.png"
     },
     "WP_G_HVY_Beam_01": {
       "displayName": "Zeus Beam",
       "category": "weapons",
       "rarity": "legendary",
       "maxDurability": 2000,
-      "icon": "zeus.png"
+      "icon": "ZeusBeam.png"
     },
     "WP_D_Sniper_Gauss_01": {
       "displayName": "Kinetic Arbiter",
       "category": "weapons",
       "rarity": "epic",
       "maxDurability": 1400,
-      "icon": "kineticArbitor.png"
+      "icon": "KineticArbiter.png"
     },
     "WP_G_Sniper_Energy_01": {
       "displayName": "Basilisk",
       "category": "weapons",
       "rarity": "epic",
       "maxDurability": 1300,
-      "icon": "basilisk.png"
+      "icon": "Basilisk.png"
     },
     "WP_D_SMG_Energy_01": {
       "displayName": "Voltaic Brute",
       "category": "weapons",
       "rarity": "exotic",
       "maxDurability": 1100,
-      "icon": "brute.png"
+      "icon": "VoltaicBrute.png"
     },
     "WP_A_AR_Bullet_01": {
       "displayName": "KOR-47",
       "category": "weapons",
       "rarity": "uncommon",
       "maxDurability": 1100,
-      "icon": "kor.png"
+      "icon": "KOR-47.png"
     },
     "WP_A_Pistol_Bullet_01": {
       "displayName": "Hammer",
       "category": "weapons",
       "rarity": "exotic",
       "maxDurability": 900,
-      "icon": "hammer.png"
+      "icon": "Hammer.png"
     },
     "WP_G_AR_Beam_01": {
       "displayName": "Gorgon",
       "category": "weapons",
       "rarity": "epic",
       "maxDurability": 1300,
-      "icon": "gorgon.png"
+      "icon": "Gorgon.png"
     },
     "WP_A_BR_Bullet_01": {
       "displayName": "KBR Longshot",
       "category": "weapons",
       "rarity": "epic",
       "maxDurability": 1200,
-      "icon": "kbr.png"
+      "icon": "KBRLongshot.png"
     },
     "WP_D_AR_Bullet_01": {
       "displayName": "Advocate",
       "category": "weapons",
       "rarity": "epic",
       "maxDurability": 1200,
-      "icon": "advo.png"
+      "icon": "Advocate.png"
     },
     "WP_D_SGun_Shard_01": {
       "displayName": "Shattergun",
       "category": "weapons",
       "rarity": "rare",
       "maxDurability": 1000,
-      "icon": "shattergun.png"
+      "icon": "Shattergun.png"
     },
     "WP_G_SMG_Needle_01": {
       "displayName": "ASP Flechette Gun",
       "category": "weapons",
       "rarity": "epic",
       "maxDurability": 1200,
-      "icon": "flechettte.png"
+      "icon": "AspFlechetteGun.png"
     },
     "WP_D_LMG_Energy_01": {
       "displayName": "ICA Guarantee",
       "category": "weapons",
       "rarity": "epic",
       "maxDurability": 1600,
-      "icon": "icagarentee.png"
+      "icon": "ICAGuarantee.png"
     },
     "WP_D_BR_Shard_01": {
       "displayName": "Lacerator",
       "category": "weapons",
       "rarity": "rare",
       "maxDurability": 1300,
-      "icon": "lacerator.png"
+      "icon": "Lacerator.png"
     },
     "WP_A_SGun_Energy_01": {
       "displayName": "PKR Maelstrom",
       "category": "weapons",
       "rarity": "uncommon",
       "maxDurability": 900,
-      "icon": "maelstrom.png"
+      "icon": "PKRMaelstrom.png"
     },
     "WP_G_AR_Energy_01": {
-      "displayName": "Phasic Lancer",
+      "displayName": "Phasic Lancer AR",
       "category": "weapons",
       "rarity": "epic",
       "maxDurability": 1400,
-      "icon": "phasicLancer.png"
+      "icon": "PhasicLancer.png"
     },
     "Helmet_01": {
       "displayName": "Basic Helmet",
       "category": "armor",
       "rarity": "common",
       "maxDurability": 400,
-      "icon": "Basic Helmet.png"
+      "icon": "BasicHelmet.png"
     },
     "Helmet_02": {
       "displayName": "Standard Helmet",
       "category": "armor",
       "rarity": "uncommon",
       "maxDurability": 600,
-      "icon": "Standard Helmet.png"
+      "icon": "StandardHelmet.png"
     },
     "Helmet_03": {
       "displayName": "Combat Helmet",
       "category": "armor",
       "rarity": "rare",
       "maxDurability": 800,
-      "icon": "Combat Helmet.png"
+      "icon": "CombatHelmet.png"
     },
     "Helmet_04": {
       "displayName": "Enhanced Helmet",
       "category": "armor",
       "rarity": "epic",
       "maxDurability": 1000,
-      "icon": "Enhanced Helmet.png"
+      "icon": "EnhancedHelmet.png"
     },
     "Helmet_05": {
       "displayName": "Superior Helmet",
       "category": "armor",
       "rarity": "legendary",
       "maxDurability": 1200,
-      "icon": "Enhanced Helmet.png"
+      "icon": "EnhancedHelmet.png"
     },
     "Helmet_Tactical_01": {
       "displayName": "Tactical Helmet I",
       "category": "armor",
       "rarity": "uncommon",
       "maxDurability": 650,
-      "icon": "Combat Helmet.png"
+      "icon": "CombatHelmet.png"
     },
     "Helmet_Tactical_02": {
       "displayName": "Tactical Helmet II",
       "category": "armor",
       "rarity": "rare",
       "maxDurability": 750,
-      "icon": "Combat Helmet.png"
+      "icon": "CombatHelmet.png"
     },
     "Helmet_Tactical_03": {
       "displayName": "Tactical Helmet III",
       "category": "armor",
       "rarity": "epic",
       "maxDurability": 900,
-      "icon": "Combat Helmet.png"
+      "icon": "CombatHelmet.png"
     },
     "Helmet_Tactical_04": {
       "displayName": "Tactical Helmet IV",
       "category": "armor",
       "rarity": "epic",
       "maxDurability": 1100,
-      "icon": "Combat Helmet.png"
+      "icon": "CombatHelmet.png"
     },
     "Helmet_Tactical_05": {
       "displayName": "Tactical Helmet V",
       "category": "armor",
       "rarity": "legendary",
       "maxDurability": 1300,
-      "icon": "Combat Helmet.png"
+      "icon": "CombatHelmet.png"
     },
     "Helmet_Restoration_01": {
       "displayName": "Restoration Helmet I",
       "category": "armor",
       "rarity": "uncommon",
       "maxDurability": 600,
-      "icon": "Enhanced Helmet.png"
+      "icon": "EnhancedHelmet.png"
     },
     "Helmet_Restoration_02": {
       "displayName": "Restoration Helmet II",
       "category": "armor",
       "rarity": "rare",
       "maxDurability": 700,
-      "icon": "Enhanced Helmet.png"
+      "icon": "EnhancedHelmet.png"
     },
     "Helmet_Restoration_03": {
       "displayName": "Restoration Helmet III",
       "category": "armor",
       "rarity": "epic",
       "maxDurability": 850,
-      "icon": "Enhanced Helmet.png"
+      "icon": "EnhancedHelmet.png"
     },
     "Helmet_Restoration_04": {
       "displayName": "Restoration Helmet IV",
       "category": "armor",
       "rarity": "legendary",
       "maxDurability": 1000,
-      "icon": "Enhanced Helmet.png"
+      "icon": "EnhancedHelmet.png"
     },
     "Helmet_NV_01": {
       "displayName": "Night Vision Helmet",
       "category": "armor",
       "rarity": "epic",
       "maxDurability": 1000,
-      "icon": "NV Helmet.png"
+      "icon": "NVHelmet.png"
     },
     "Helmet_Altered_01": {
       "displayName": "Altered Helmet I",
       "category": "armor",
       "rarity": "rare",
       "maxDurability": 750,
-      "icon": "Altered Helmet.png"
+      "icon": "AlteredCombatHelmet.png"
     },
     "Helmet_Altered_02": {
       "displayName": "Altered Helmet II",
       "category": "armor",
       "rarity": "epic",
       "maxDurability": 900,
-      "icon": "Altered Helmet.png"
+      "icon": "AlteredEnhancedHelmet.png"
     },
     "Helmet_Altered_03": {
       "displayName": "Altered Helmet III",
       "category": "armor",
       "rarity": "legendary",
       "maxDurability": 1100,
-      "icon": "Altered Helmet.png"
+      "icon": "AlteredEnhancedHelmet.png"
     },
     "Shield_01": {
       "displayName": "Basic Shield",
       "category": "armor",
       "rarity": "common",
       "maxDurability": 500,
-      "icon": "Basic Shields.png"
+      "icon": "BasicShields.png"
     },
     "Shield_02": {
       "displayName": "Standard Shield",
       "category": "armor",
       "rarity": "uncommon",
       "maxDurability": 650,
-      "icon": "Standard Shields.png"
+      "icon": "StandardShields.png"
     },
     "Shield_03": {
       "displayName": "Combat Shield",
       "category": "armor",
       "rarity": "rare",
       "maxDurability": 800,
-      "icon": "Combat Shields.png"
+      "icon": "CombatShields.png"
     },
     "Shield_04": {
       "displayName": "Enhanced Shield",
       "category": "armor",
       "rarity": "epic",
       "maxDurability": 950,
-      "icon": "Enhanced Shields.png"
+      "icon": "EnhancedShields.png"
     },
     "Shield_05": {
       "displayName": "Superior Shield",
       "category": "armor",
       "rarity": "legendary",
       "maxDurability": 1200,
-      "icon": "Enhanced Shields.png"
+      "icon": "EnhancedShields.png"
     },
     "Shield_Restoration_01": {
       "displayName": "Restoration Shield I",
       "category": "armor",
       "rarity": "uncommon",
       "maxDurability": 650,
-      "icon": "Enhanced Shields.png"
+      "icon": "EnhancedShields.png"
     },
     "Shield_Restoration_02": {
       "displayName": "Restoration Shield II",
       "category": "armor",
       "rarity": "rare",
       "maxDurability": 800,
-      "icon": "Enhanced Shields.png"
+      "icon": "EnhancedShields.png"
     },
     "Shield_Restoration_03": {
       "displayName": "Restoration Shield III",
       "category": "armor",
       "rarity": "epic",
       "maxDurability": 950,
-      "icon": "Enhanced Shields.png"
+      "icon": "EnhancedShields.png"
     },
     "ShieldRestoration04": {
       "displayName": "Restoration Shield IV",
       "category": "armor",
       "rarity": "legendary",
       "maxDurability": 1100,
-      "icon": "Enhanced Shields.png"
+      "icon": "EnhancedShields.png"
     },
     "Shield_Altered_01": {
       "displayName": "Altered Shield I",
       "category": "armor",
       "rarity": "rare",
       "maxDurability": 800,
-      "icon": "Altered Shields.png"
+      "icon": "AlteredShields.png"
     },
     "Shield_Altered_02": {
       "displayName": "Altered Shield II",
       "category": "armor",
       "rarity": "epic",
       "maxDurability": 950,
-      "icon": "Altered Shields.png"
+      "icon": "AlteredShields.png"
     },
     "Shield_Altered_03": {
       "displayName": "Altered Shield III",
       "category": "armor",
       "rarity": "legendary",
       "maxDurability": 1200,
-      "icon": "Altered Shields.png"
+      "icon": "AlteredShields.png"
     },
     "Bag_01_broken": {
       "displayName": "Worn Emergency Bag",
       "category": "armor",
       "rarity": "common",
       "maxDurability": -1,
-      "icon": "Worn Emergency Bag.png"
+      "icon": "WornEmergencyBag.png"
     },
     "Bag_01": {
       "displayName": "Small Backpack",
       "category": "armor",
       "rarity": "common",
       "maxDurability": -1,
-      "icon": "Small Backpack.png"
+      "icon": "SmallBackpack.png"
     },
     "Bag_02": {
       "displayName": "Medium Backpack",
       "category": "armor",
       "rarity": "uncommon",
       "maxDurability": -1,
-      "icon": "Medium Backpack.png"
+      "icon": "MediumBackpack.png"
     },
     "Bag_03": {
       "displayName": "Large Backpack",
       "category": "armor",
       "rarity": "rare",
       "maxDurability": -1,
-      "icon": "Large Backpack.png"
+      "icon": "LargeBackpack.png"
     },
     "Bag_04": {
       "displayName": "Heavy Duty Backpack",
       "category": "armor",
       "rarity": "epic",
       "maxDurability": -1,
-      "icon": "Heavy Duty Backpack.png"
+      "icon": "HeavyDutyBackpack.png"
     },
     "Bag_05": {
       "displayName": "Military Backpack",
       "category": "armor",
       "rarity": "legendary",
       "maxDurability": -1,
-      "icon": "Heavy Duty Backpack.png"
+      "icon": "HeavyDutyBackpack.png"
     },
     "Bag_Altered_01": {
       "displayName": "Altered Backpack I",
       "category": "armor",
       "rarity": "rare",
       "maxDurability": -1,
-      "icon": "Altered Backpack.png"
+      "icon": "AlteredBackpack.png"
     },
     "Bag_Altered_02": {
       "displayName": "Altered Backpack II",
       "category": "armor",
       "rarity": "epic",
       "maxDurability": -1,
-      "icon": "Altered Backpack.png"
+      "icon": "AlteredBackpack.png"
     },
     "Bag_Altered_03": {
       "displayName": "Altered Backpack III",
       "category": "armor",
       "rarity": "legendary",
       "maxDurability": -1,
-      "icon": "Altered Backpack.png"
+      "icon": "AlteredBackpack.png"
     },
     "Vest_01": {
       "displayName": "Basic Vest",
       "category": "armor",
       "rarity": "common",
       "maxDurability": 400,
-      "icon": "Basic Vest.png"
+      "icon": "BasicVest.png"
     },
     "Vest_02": {
       "displayName": "Standard Vest",
       "category": "armor",
       "rarity": "uncommon",
       "maxDurability": 600,
-      "icon": "Standard Vest.png"
+      "icon": "StandardVest.png"
     },
     "Vest_03": {
       "displayName": "Combat Vest",
       "category": "armor",
       "rarity": "rare",
       "maxDurability": 800,
-      "icon": "Combat Vest.png"
+      "icon": "CombatVest.png"
     },
     "Vest_04": {
       "displayName": "Enhanced Vest",
       "category": "armor",
       "rarity": "epic",
       "maxDurability": 1000,
-      "icon": "Enhanced Vest.png"
+      "icon": "EnhancedVest.png"
     },
     "Vest_05": {
       "displayName": "Superior Vest",
       "category": "armor",
       "rarity": "legendary",
       "maxDurability": 1200,
-      "icon": "Enhanced Vest.png"
+      "icon": "EnhancedVest.png"
     },
     "Vest_Tactical_01": {
       "displayName": "Tactical Vest I",
       "category": "armor",
       "rarity": "uncommon",
       "maxDurability": 650,
-      "icon": "Combat Vest.png"
+      "icon": "CombatVest.png"
     },
     "Vest_Tactical_02": {
       "displayName": "Tactical Vest II",
       "category": "armor",
       "rarity": "rare",
       "maxDurability": 750,
-      "icon": "Combat Vest.png"
+      "icon": "CombatVest.png"
     },
     "Vest_Tactical_03": {
       "displayName": "Tactical Vest III",
       "category": "armor",
       "rarity": "epic",
       "maxDurability": 900,
-      "icon": "Combat Vest.png"
+      "icon": "CombatVest.png"
     },
     "Vest_Tactical_04": {
       "displayName": "Tactical Vest IV",
       "category": "armor",
       "rarity": "epic",
       "maxDurability": 1100,
-      "icon": "Combat Vest.png"
+      "icon": "CombatVest.png"
     },
     "Vest_Tactical_05": {
       "displayName": "Tactical Vest V",
       "category": "armor",
       "rarity": "legendary",
       "maxDurability": 1300,
-      "icon": "Combat Vest.png"
+      "icon": "CombatVest.png"
     },
     "TOOL_Mining_01": {
       "displayName": "Heavy Mining Tool",
       "category": "tools",
       "rarity": "common",
       "maxDurability": 800,
-      "icon": "Heavy Mining Tool.png"
+      "icon": "HeavyMiningTool.png"
     },
     "TOOL_MineralScanner_01": {
       "displayName": "Mineral Scanner",
@@ -775,329 +776,329 @@
       "category": "attachments",
       "rarity": "uncommon",
       "maxDurability": -1,
-      "icon": "Veltecite Scanning Module.png"
+      "icon": "VelteciteScanningModule.png"
     },
     "Mod_Optic_1x_01": {
       "displayName": "1x Optic",
       "category": "attachments",
       "rarity": "common",
       "maxDurability": -1,
-      "icon": "1x Optic.png"
+      "icon": "1xOptic.png"
     },
     "Mod_Optic_2x_01": {
       "displayName": "2x Optic",
       "category": "attachments",
       "rarity": "uncommon",
       "maxDurability": -1,
-      "icon": "2x Optic.png"
+      "icon": "2xOptic.png"
     },
     "Mod_Optic_4x_01": {
       "displayName": "4x Optic",
       "category": "attachments",
       "rarity": "rare",
       "maxDurability": -1,
-      "icon": "4x Optic.png"
+      "icon": "4xOptic.png"
     },
     "Mod_Optic_Variable_01": {
       "displayName": "Variable Optic",
       "category": "attachments",
       "rarity": "epic",
       "maxDurability": -1,
-      "icon": "Variable Optic.png"
+      "icon": "2-4xVariableOptic.png"
     },
     "Mod_Magazine_Light_01": {
       "displayName": "Light Magazine I",
       "category": "attachments",
       "rarity": "common",
       "maxDurability": -1,
-      "icon": "Light Extended.png"
+      "icon": "LightExtended.png"
     },
     "Mod_Magazine_Light_02": {
       "displayName": "Light Magazine II",
       "category": "attachments",
       "rarity": "uncommon",
       "maxDurability": -1,
-      "icon": "Light Extended.png"
+      "icon": "LightExtended.png"
     },
     "Mod_Magazine_Light_03": {
       "displayName": "Light Extended Magazine",
       "category": "attachments",
       "rarity": "rare",
       "maxDurability": -1,
-      "icon": "Light Extended.png"
+      "icon": "LightExtended.png"
     },
     "Mod_Magazine_Medium_01": {
       "displayName": "Medium Magazine I",
       "category": "attachments",
       "rarity": "common",
       "maxDurability": -1,
-      "icon": "Medium Extended.png"
+      "icon": "MediumExtended.png"
     },
     "Mod_Magazine_Heavy_01": {
       "displayName": "Heavy Magazine I",
       "category": "attachments",
       "rarity": "common",
       "maxDurability": -1,
-      "icon": "Heavy Extended.png"
+      "icon": "HeavyExtended.png"
     },
     "Mod_Magazine_Shotgun_01": {
       "displayName": "Shotgun Magazine I",
       "category": "attachments",
       "rarity": "common",
       "maxDurability": -1,
-      "icon": "Shotgun Extended.png"
+      "icon": "ShotgunExtended.png"
     },
     "Mod_Muzzle_Small_Supressor_01": {
       "displayName": "Small Suppressor",
       "category": "attachments",
       "rarity": "uncommon",
       "maxDurability": -1,
-      "icon": "Small Suppressor.png"
+      "icon": "SmallSuppressor.png"
     },
     "Mod_RearGrip_ADS_02": {
       "displayName": "ADS Rear Grip",
       "category": "attachments",
       "rarity": "uncommon",
       "maxDurability": -1,
-      "icon": "Rear Grip.png"
+      "icon": "TacticalRearGrip.png"
     },
     "Mod_Converter_Light_AIDMG_03": {
       "displayName": "Light AI Damage Converter",
       "category": "attachments",
       "rarity": "rare",
       "maxDurability": -1,
-      "icon": "Converter.png"
+      "icon": "LightConverter.png"
     },
     "Light_01": {
       "displayName": "Light Ammo I",
       "category": "ammo",
       "rarity": "common",
       "maxDurability": -1,
-      "icon": "Light Ammo.png"
+      "icon": "LightAmmo.png"
     },
     "Light_02": {
       "displayName": "Light Ammo II",
       "category": "ammo",
       "rarity": "uncommon",
       "maxDurability": -1,
-      "icon": "Light Ammo.png"
+      "icon": "LightAmmo.png"
     },
     "Light_03": {
       "displayName": "Light Ammo III",
       "category": "ammo",
       "rarity": "rare",
       "maxDurability": -1,
-      "icon": "Light Ammo.png"
+      "icon": "LightAmmo.png"
     },
     "Light_04": {
       "displayName": "Light Ammo IV",
       "category": "ammo",
       "rarity": "epic",
       "maxDurability": -1,
-      "icon": "Light Ammo.png"
+      "icon": "LightAmmo.png"
     },
     "Light_05": {
       "displayName": "Light Ammo V",
       "category": "ammo",
       "rarity": "legendary",
       "maxDurability": -1,
-      "icon": "Light Ammo.png"
+      "icon": "LightAmmo.png"
     },
     "Medium_01": {
       "displayName": "Medium Ammo I",
       "category": "ammo",
       "rarity": "common",
       "maxDurability": -1,
-      "icon": "Medium Ammo.png"
+      "icon": "MediumAmmo.png"
     },
     "Medium_02": {
       "displayName": "Medium Ammo II",
       "category": "ammo",
       "rarity": "uncommon",
       "maxDurability": -1,
-      "icon": "Medium Ammo.png"
+      "icon": "MediumAmmo.png"
     },
     "Medium_03": {
       "displayName": "Medium Ammo III",
       "category": "ammo",
       "rarity": "rare",
       "maxDurability": -1,
-      "icon": "Medium Ammo.png"
+      "icon": "MediumAmmo.png"
     },
     "Medium_04": {
       "displayName": "Medium Ammo IV",
       "category": "ammo",
       "rarity": "epic",
       "maxDurability": -1,
-      "icon": "Medium Ammo.png"
+      "icon": "MediumAmmo.png"
     },
     "Medium_05": {
       "displayName": "Medium Ammo V",
       "category": "ammo",
       "rarity": "legendary",
       "maxDurability": -1,
-      "icon": "Medium Ammo.png"
+      "icon": "MediumAmmo.png"
     },
     "Heavy_01": {
       "displayName": "Heavy Ammo I",
       "category": "ammo",
       "rarity": "common",
       "maxDurability": -1,
-      "icon": "Heavy Ammo.png"
+      "icon": "HeavyAmmo.png"
     },
     "Heavy_02": {
       "displayName": "Heavy Ammo II",
       "category": "ammo",
       "rarity": "uncommon",
       "maxDurability": -1,
-      "icon": "Heavy Ammo.png"
+      "icon": "HeavyAmmo.png"
     },
     "Heavy_03": {
       "displayName": "Heavy Ammo III",
       "category": "ammo",
       "rarity": "rare",
       "maxDurability": -1,
-      "icon": "Heavy Ammo.png"
+      "icon": "HeavyAmmo.png"
     },
     "Heavy_04": {
       "displayName": "Heavy Ammo IV",
       "category": "ammo",
       "rarity": "epic",
       "maxDurability": -1,
-      "icon": "Heavy Ammo.png"
+      "icon": "HeavyAmmo.png"
     },
     "Heavy_05": {
       "displayName": "Heavy Ammo V",
       "category": "ammo",
       "rarity": "legendary",
       "maxDurability": -1,
-      "icon": "Heavy Ammo.png"
+      "icon": "HeavyAmmo.png"
     },
     "Shotgun_01": {
       "displayName": "Shotgun Ammo I",
       "category": "ammo",
       "rarity": "common",
       "maxDurability": -1,
-      "icon": "Shotgun Ammo.png"
+      "icon": "ShotgunAmmo.png"
     },
     "Shotgun_02": {
       "displayName": "Shotgun Ammo II",
       "category": "ammo",
       "rarity": "uncommon",
       "maxDurability": -1,
-      "icon": "Shotgun Ammo.png"
+      "icon": "ShotgunAmmo.png"
     },
     "Shotgun_03": {
       "displayName": "Shotgun Ammo III",
       "category": "ammo",
       "rarity": "rare",
       "maxDurability": -1,
-      "icon": "Shotgun Ammo.png"
+      "icon": "ShotgunAmmo.png"
     },
     "Shotgun_04": {
       "displayName": "Shotgun Ammo IV",
       "category": "ammo",
       "rarity": "epic",
       "maxDurability": -1,
-      "icon": "Shotgun Ammo.png"
+      "icon": "ShotgunAmmo.png"
     },
     "Shotgun_05": {
       "displayName": "Shotgun Ammo V",
       "category": "ammo",
       "rarity": "legendary",
       "maxDurability": -1,
-      "icon": "Shotgun Ammo.png"
+      "icon": "ShotgunAmmo.png"
     },
     "Special_01": {
       "displayName": "Special Ammo I",
       "category": "ammo",
       "rarity": "common",
       "maxDurability": -1,
-      "icon": "Special Ammo.png"
+      "icon": "SpecialAmmo.png"
     },
     "Special_02": {
       "displayName": "Special Ammo II",
       "category": "ammo",
       "rarity": "uncommon",
       "maxDurability": -1,
-      "icon": "Special Ammo.png"
+      "icon": "SpecialAmmo.png"
     },
     "Special_03": {
       "displayName": "Special Ammo III",
       "category": "ammo",
       "rarity": "rare",
       "maxDurability": -1,
-      "icon": "Special Ammo.png"
+      "icon": "SpecialAmmo.png"
     },
     "Special_04": {
       "displayName": "Special Ammo IV",
       "category": "ammo",
       "rarity": "epic",
       "maxDurability": -1,
-      "icon": "Special Ammo.png"
+      "icon": "SpecialAmmo.png"
     },
     "Special_05": {
       "displayName": "Special Ammo V",
       "category": "ammo",
       "rarity": "legendary",
       "maxDurability": -1,
-      "icon": "Special Ammo.png"
+      "icon": "SpecialAmmo.png"
     },
     "Special_06_2": {
       "displayName": "Special Ammo VI",
       "category": "ammo",
       "rarity": "legendary",
       "maxDurability": -1,
-      "icon": "Special Ammo.png"
+      "icon": "SpecialAmmo.png"
     },
     "CommonVeltecite": {
       "displayName": "Common Veltecite",
       "category": "materials",
       "rarity": "common",
       "maxDurability": -1,
-      "icon": "Veltecite.png"
+      "icon": "CloudyVeltecite.png"
     },
     "UncommonVelticite": {
       "displayName": "Uncommon Veltecite",
       "category": "materials",
       "rarity": "uncommon",
       "maxDurability": -1,
-      "icon": "Veltecite.png"
+      "icon": "FlawedVeltecite.png"
     },
     "RareVeltecite": {
       "displayName": "Rare Veltecite",
       "category": "materials",
       "rarity": "rare",
       "maxDurability": -1,
-      "icon": "Veltecite.png"
+      "icon": "ClearVeltecite.png"
     },
     "EpicVeltecite": {
       "displayName": "Epic Veltecite",
       "category": "materials",
       "rarity": "epic",
       "maxDurability": -1,
-      "icon": "Veltecite.png"
+      "icon": "PureVeltecite.png"
     },
     "VelteciteHeart": {
       "displayName": "Veltecite Heart",
       "category": "materials",
       "rarity": "legendary",
       "maxDurability": -1,
-      "icon": "Veltecite Heart.png"
+      "icon": "VelteciteHeart.png"
     },
     "FocusCrystal": {
       "displayName": "Focus Crystal",
       "category": "materials",
       "rarity": "uncommon",
       "maxDurability": -1,
-      "icon": "Focus Crystal.png"
+      "icon": "FocusCrystal.png"
     },
     "PureFocusCrystal": {
       "displayName": "Pure Focus Crystal",
       "category": "materials",
       "rarity": "rare",
       "maxDurability": -1,
-      "icon": "Pure Focus Crystal.png"
+      "icon": "PureFocusCrystal.png"
     },
     "Nickel": {
       "displayName": "Nickel",
@@ -1111,14 +1112,14 @@
       "category": "materials",
       "rarity": "uncommon",
       "maxDurability": -1,
-      "icon": "Pure Nickel.png"
+      "icon": "PureNickel.png"
     },
     "BrightSands": {
       "displayName": "Bright Sands",
       "category": "materials",
       "rarity": "common",
       "maxDurability": -1,
-      "icon": "Bright Sands.png"
+      "icon": "BrightSands.png"
     },
     "Oil": {
       "displayName": "Oil",
@@ -1128,231 +1129,322 @@
       "icon": "Oil.png"
     },
     "ZeroSystems": {
-      "displayName": "Zero Systems",
+      "displayName": "Zero Systems CPU",
       "category": "materials",
       "rarity": "rare",
       "maxDurability": -1,
-      "icon": "Zero Systems.png"
+      "icon": "ZeroSystemsCPU.png"
     },
     "KorolevScrip": {
       "displayName": "Korolev Scrip",
       "category": "materials",
       "rarity": "common",
       "maxDurability": -1,
-      "icon": "Korolev Scrip.png"
+      "icon": "KorolevScrip.png"
     },
     "ICAScrip": {
       "displayName": "ICA Scrip",
       "category": "materials",
       "rarity": "common",
       "maxDurability": -1,
-      "icon": "ICA Scrip.png"
+      "icon": "ICAScrip.png"
     },
     "OsirisCredits": {
       "displayName": "Osiris Credits",
       "category": "materials",
       "rarity": "common",
       "maxDurability": -1,
-      "icon": "Osiris Credits.png"
+      "icon": "OsirisScrip.png"
     },
     "QuestItem_OilPumpBeacon": {
       "displayName": "Oil Pump Beacon",
       "category": "materials",
       "rarity": "common",
       "maxDurability": -1,
-      "icon": "Beacon.png"
+      "icon": "OilPumpBeacon.png"
     },
     "QuestItem_OrbitalCanonTargetBeacon": {
       "displayName": "Orbital Canon Target Beacon",
       "category": "materials",
       "rarity": "common",
       "maxDurability": -1,
-      "icon": "Beacon.png"
+      "icon": "OrbitalCannonBeacon.png"
     },
     "QuestItem_LaserDrillBeacon": {
       "displayName": "Laser Drill Beacon",
       "category": "materials",
       "rarity": "common",
       "maxDurability": -1,
-      "icon": "Beacon.png"
+      "icon": "LaserDrillBeacon.png"
     },
     "Map01_KeyCard_01": {
       "displayName": "Bright Sands Keycard 01",
       "category": "materials",
       "rarity": "uncommon",
       "maxDurability": 15,
-      "icon": "Keycard.png"
+      "icon": "KeyCardBlue.png"
     },
     "Map01_KeyCard_02": {
       "displayName": "Bright Sands Keycard 02",
       "category": "materials",
       "rarity": "uncommon",
       "maxDurability": 15,
-      "icon": "Keycard.png"
+      "icon": "KeyCardBlue.png"
     },
     "Map01_KeyCard_03": {
       "displayName": "Bright Sands Keycard 03",
       "category": "materials",
       "rarity": "uncommon",
       "maxDurability": 15,
-      "icon": "Keycard.png"
+      "icon": "KeyCardBlue.png"
     },
     "Map01_KeyCard_04": {
       "displayName": "Bright Sands Keycard 04",
       "category": "materials",
       "rarity": "rare",
       "maxDurability": 15,
-      "icon": "Keycard.png"
+      "icon": "KeyCardBlue.png"
     },
     "Map01_KeyCard_05": {
       "displayName": "Bright Sands Keycard 05",
       "category": "materials",
       "rarity": "rare",
       "maxDurability": 15,
-      "icon": "Keycard.png"
+      "icon": "KeyCardBlue.png"
     },
     "Map01_KeyCard_06": {
       "displayName": "Bright Sands Keycard 06",
       "category": "materials",
       "rarity": "epic",
       "maxDurability": 15,
-      "icon": "Keycard.png"
+      "icon": "KeyCardYellow.png"
     },
     "Map01_KeyCard_07": {
       "displayName": "Bright Sands Keycard 07",
       "category": "materials",
       "rarity": "epic",
       "maxDurability": 15,
-      "icon": "Keycard.png"
+      "icon": "KeyCardYellow.png"
     },
     "Map01_KeyCard_08": {
       "displayName": "Bright Sands Keycard 08",
       "category": "materials",
       "rarity": "legendary",
       "maxDurability": 15,
-      "icon": "Keycard.png"
+      "icon": "KeyCardYellow.png"
     },
     "Map02_KeyCard_01": {
       "displayName": "Crescent Falls Keycard 01",
       "category": "materials",
       "rarity": "uncommon",
       "maxDurability": 15,
-      "icon": "Keycard.png"
+      "icon": "KeyCardBlue.png"
     },
     "Map02_KeyCard_02": {
       "displayName": "Crescent Falls Keycard 02",
       "category": "materials",
       "rarity": "uncommon",
       "maxDurability": 15,
-      "icon": "Keycard.png"
+      "icon": "KeyCardBlue.png"
     },
     "Map02_KeyCard_03": {
       "displayName": "Crescent Falls Keycard 03",
       "category": "materials",
       "rarity": "uncommon",
       "maxDurability": 15,
-      "icon": "Keycard.png"
+      "icon": "KeyCardBlue.png"
     },
     "Map02_KeyCard_04": {
       "displayName": "Crescent Falls Keycard 04",
       "category": "materials",
       "rarity": "rare",
       "maxDurability": 15,
-      "icon": "Keycard.png"
+      "icon": "KeyCardBlue.png"
     },
     "Map02_KeyCard_05": {
       "displayName": "Crescent Falls Keycard 05",
       "category": "materials",
       "rarity": "rare",
       "maxDurability": 15,
-      "icon": "Keycard.png"
+      "icon": "KeyCardBlue.png"
     },
     "Map02_KeyCard_06": {
       "displayName": "Crescent Falls Keycard 06",
       "category": "materials",
       "rarity": "epic",
       "maxDurability": 15,
-      "icon": "Keycard.png"
+      "icon": "KeyCardYellow.png"
     },
     "Map02_KeyCard_07": {
       "displayName": "Crescent Falls Keycard 07",
       "category": "materials",
       "rarity": "epic",
       "maxDurability": 15,
-      "icon": "Keycard.png"
+      "icon": "KeyCardYellow.png"
     },
     "Map02_KeyCard_08": {
       "displayName": "Crescent Falls Keycard 08",
       "category": "materials",
       "rarity": "legendary",
       "maxDurability": 15,
-      "icon": "Keycard.png"
+      "icon": "KeyCardYellow.png"
     },
     "Map02_KeyCard_09": {
       "displayName": "Crescent Falls Keycard 09",
       "category": "materials",
       "rarity": "legendary",
       "maxDurability": 15,
-      "icon": "Keycard.png"
+      "icon": "KeyCardYellow.png"
     },
     "Map03_KeyCard_01": {
       "displayName": "Tharis Island Keycard 01",
       "category": "materials",
       "rarity": "uncommon",
       "maxDurability": 15,
-      "icon": "Keycard.png"
+      "icon": "KeyCardBlue.png"
     },
     "Map03_KeyCard_02": {
       "displayName": "Tharis Island Keycard 02",
       "category": "materials",
       "rarity": "uncommon",
       "maxDurability": 15,
-      "icon": "Keycard.png"
+      "icon": "KeyCardBlue.png"
     },
     "Map03_KeyCard_03": {
       "displayName": "Tharis Island Keycard 03",
       "category": "materials",
       "rarity": "uncommon",
       "maxDurability": 15,
-      "icon": "Keycard.png"
+      "icon": "KeyCardBlue.png"
     },
     "Map03_KeyCard_04": {
       "displayName": "Tharis Island Keycard 04",
       "category": "materials",
       "rarity": "rare",
       "maxDurability": 15,
-      "icon": "Keycard.png"
+      "icon": "KeyCardBlue.png"
     },
     "Map03_KeyCard_05": {
       "displayName": "Tharis Island Keycard 05",
       "category": "materials",
       "rarity": "rare",
       "maxDurability": 15,
-      "icon": "Keycard.png"
+      "icon": "KeyCardBlue.png"
     },
     "Map03_KeyCard_06": {
       "displayName": "Tharis Island Keycard 06",
       "category": "materials",
       "rarity": "epic",
       "maxDurability": 15,
-      "icon": "Keycard.png"
+      "icon": "KeyCardYellow.png"
     },
     "Map03_KeyCard_07": {
       "displayName": "Tharis Island Keycard 07",
       "category": "materials",
       "rarity": "epic",
       "maxDurability": 15,
-      "icon": "Keycard.png"
+      "icon": "KeyCardYellow.png"
     },
     "Map03_KeyCard_08": {
       "displayName": "Tharis Island Keycard 08",
       "category": "materials",
       "rarity": "legendary",
       "maxDurability": 15,
-      "icon": "keycard.png"
-    }
+      "icon": "KeyCardYellow.png"
     },
-    "rarityColors": {
+    "TitanOre": {
+      "displayName": "Titan Ore",
+      "category": "materials",
+      "rarity": "rare",
+      "maxDurability": -1,
+      "icon": "TitanOre.png"
+    },
+    "BrittleTitanOre": {
+      "displayName": "Brittle Titan Ore",
+      "category": "materials",
+      "rarity": "uncommon",
+      "maxDurability": -1,
+      "icon": "BrittleTitanOre.png"
+    },
+    "Aurum": {
+      "displayName": "Aurum",
+      "category": "materials",
+      "rarity": "epic",
+      "maxDurability": -1,
+      "icon": "Aurum.png"
+    },
+    "Letium": {
+      "displayName": "Letium",
+      "category": "materials",
+      "rarity": "legendary",
+      "maxDurability": -1,
+      "icon": "Letium.png"
+    },
+    "PrintResin": {
+      "displayName": "Print Resin",
+      "category": "materials",
+      "rarity": "common",
+      "maxDurability": -1,
+      "icon": "PrintResin.png"
+    },
+    "Polymetallic": {
+      "displayName": "Polymetallic Prefabricate",
+      "category": "materials",
+      "rarity": "uncommon",
+      "maxDurability": -1,
+      "icon": "PolymetallicPrefabricate.png"
+    },
+    "MetallicAlloys": {
+      "displayName": "Metallic Alloys",
+      "category": "materials",
+      "rarity": "rare",
+      "maxDurability": -1,
+      "icon": "MetallicAlloys.png"
+    },
+    "HardenedMetals": {
+      "displayName": "Hardened Metals",
+      "category": "materials",
+      "rarity": "epic",
+      "maxDurability": -1,
+      "icon": "HardenedMetals.png"
+    },
+    "MeteorFragment": {
+      "displayName": "Meteor Fragment",
+      "category": "materials",
+      "rarity": "uncommon",
+      "maxDurability": -1,
+      "icon": "MeteorFragment.png"
+    },
+    "MeteorCore": {
+      "displayName": "Meteor Core",
+      "category": "materials",
+      "rarity": "rare",
+      "maxDurability": -1,
+      "icon": "MeteorCore.png"
+    },
+    "AlteredMeteorFragment": {
+      "displayName": "Altered Meteor Fragment",
+      "category": "materials",
+      "rarity": "rare",
+      "maxDurability": -1,
+      "icon": "AlteredMeteorFragment.png"
+    },
+    "AlteredMeteorCore": {
+      "displayName": "Altered Meteor Core",
+      "category": "materials",
+      "rarity": "epic",
+      "maxDurability": -1,
+      "icon": "AlteredMeteorCore.png"
+    },
+    "AlteredNickel": {
+      "displayName": "Altered Nickel",
+      "category": "materials",
+      "rarity": "uncommon",
+      "maxDurability": -1,
+      "icon": "AlteredNickel.png"
+    }
+  },
+  "rarityColors": {
     "common": "#b0b0b0",
     "uncommon": "#4ecb4b",
     "rare": "#3b7fff",
@@ -1360,4 +1452,4 @@
     "exotic": "#ff4e4e",
     "legendary": "#ffb300"
   }
-  }
+}
