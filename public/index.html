@@ -1,0 +1,1350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Cycle: Reborn - Save Editor</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            color: #e0e0e0;
+            min-height: 100vh;
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+
+        /* Hide default scrollbar */
+        body::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        body::-webkit-scrollbar-track {
+            background: rgba(45, 55, 75, 0.8);
+        }
+
+        body::-webkit-scrollbar-thumb {
+            background: #64ffda;
+            border-radius: 4px;
+        }
+
+        body::-webkit-scrollbar-thumb:hover {
+            background: #4fd1c7;
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+            padding-bottom: 80px; /* Space for status bar */
+        }
+
+        .sidebar {
+            width: 250px;
+            background: rgba(20, 25, 40, 0.9);
+            padding: 20px;
+            border-right: 2px solid #4a5568;
+            backdrop-filter: blur(10px);
+        }
+
+        .sidebar h2 {
+            color: #64ffda;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 1.2em;
+            border-bottom: 2px solid #4a5568;
+            padding-bottom: 10px;
+        }
+
+        .filter-section {
+            margin-bottom: 30px;
+        }
+
+        .filter-section h3 {
+            color: #a0aec0;
+            margin-bottom: 10px;
+            font-size: 0.9em;
+            text-transform: uppercase;
+        }
+
+        .filter-btn, .category-btn {
+            display: block;
+            width: 100%;
+            padding: 12px 15px;
+            margin-bottom: 5px;
+            background: rgba(45, 55, 75, 0.8);
+            border: 1px solid #4a5568;
+            color: #e0e0e0;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-radius: 4px;
+            font-size: 0.9em;
+        }
+
+        .filter-btn:hover, .category-btn:hover {
+            background: rgba(100, 255, 218, 0.2);
+            border-color: #64ffda;
+            transform: translateX(5px);
+        }
+
+        .filter-btn.active, .category-btn.active {
+            background: linear-gradient(135deg, #64ffda 0%, #4fd1c7 100%);
+            color: #1a202c;
+            border-color: #64ffda;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            max-height: 100vh;
+        }
+
+        /* Hide scrollbar for main content when browse items is open */
+        .main-content.hide-scrollbar {
+            overflow: hidden;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: rgba(20, 25, 40, 0.8);
+            border-radius: 10px;
+            border: 1px solid #4a5568;
+        }
+
+        .header h1 {
+            color: #64ffda;
+            font-size: 2em;
+            text-shadow: 0 0 10px rgba(100, 255, 218, 0.3);
+        }
+
+        .header-buttons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9em;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+        }
+
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(79, 172, 254, 0.4);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 65, 108, 0.4);
+        }
+
+        .search-container {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 15px 20px;
+            background: rgba(45, 55, 75, 0.8);
+            border: 2px solid #4a5568;
+            border-radius: 8px;
+            color: #e0e0e0;
+            font-size: 1em;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #64ffda;
+            background: rgba(45, 55, 75, 1);
+            box-shadow: 0 0 20px rgba(100, 255, 218, 0.2);
+        }
+
+        .inventory-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 15px;
+            padding: 20px;
+            background: rgba(20, 25, 40, 0.6);
+            border-radius: 10px;
+            border: 1px solid #4a5568;
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        .item-slot {
+            aspect-ratio: 1;
+            background: linear-gradient(135deg, #2d3748 0%, #1a202c 100%);
+            border: 2px solid #4a5568;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            padding: 8px;
+        }
+
+        .item-slot:hover {
+            border-color: #64ffda;
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(100, 255, 218, 0.2);
+        }
+
+        .item-slot.empty {
+            border-style: dashed;
+            border-color: #4a5568;
+        }
+
+        .item-slot.empty:hover {
+            border-color: #64ffda;
+            background: rgba(100, 255, 218, 0.1);
+        }
+
+        .item-image {
+            width: 60px;
+            height: 60px;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            margin-bottom: 5px;
+            border-radius: 4px;
+            position: relative;
+        }
+
+        .item-image.placeholder {
+            background: #4a5568;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7em;
+            text-align: center;
+            color: #a0aec0;
+        }
+
+        /* Rarity borders for item images */
+        .item-image.rarity-common {
+            border: 2px solid #9e9e9e;
+            box-shadow: 0 0 8px rgba(158, 158, 158, 0.4);
+        }
+
+        .item-image.rarity-uncommon {
+            border: 2px solid #4caf50;
+            box-shadow: 0 0 8px rgba(76, 175, 80, 0.4);
+        }
+
+        .item-image.rarity-rare {
+            border: 2px solid #2196f3;
+            box-shadow: 0 0 8px rgba(33, 150, 243, 0.4);
+        }
+
+        .item-image.rarity-epic {
+            border: 2px solid #9c27b0;
+            box-shadow: 0 0 8px rgba(156, 39, 176, 0.4);
+        }
+
+        .item-image.rarity-exotic {
+            border: 2px solid #ff4e4e;
+            box-shadow: 0 0 8px rgba(255, 78, 78, 0.4);
+        }
+
+        .item-image.rarity-legendary {
+            border: 2px solid #ff9800;
+            box-shadow: 0 0 8px rgba(255, 152, 0, 0.4);
+        }
+
+        .item-amount {
+            position: absolute;
+            bottom: 5px;
+            right: 5px;
+            background: rgba(0, 0, 0, 0.8);
+            color: #64ffda;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 0.8em;
+            font-weight: bold;
+        }
+
+        .item-name {
+            font-size: 0.7em;
+            text-align: center;
+            color: #a0aec0;
+            max-width: 100%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .available-items {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+            max-height: 70vh;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+
+        /* Custom scrollbar for available items */
+        .available-items::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .available-items::-webkit-scrollbar-track {
+            background: rgba(45, 55, 75, 0.8);
+            border-radius: 4px;
+        }
+
+        .available-items::-webkit-scrollbar-thumb {
+            background: #64ffda;
+            border-radius: 4px;
+        }
+
+        .available-items::-webkit-scrollbar-thumb:hover {
+            background: #4fd1c7;
+        }
+
+        .available-item {
+            background: linear-gradient(135deg, #2d3748 0%, #1a202c 100%);
+            border: 2px solid #4a5568;
+            border-radius: 8px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .available-item:hover {
+            border-color: #64ffda;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(100, 255, 218, 0.2);
+        }
+
+        .available-item:hover .available-item-controls {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .available-item-icon {
+            width: 50px;
+            height: 50px;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            flex-shrink: 0;
+            border-radius: 4px;
+            position: relative;
+        }
+
+        /* Rarity borders for available item icons */
+        .available-item-icon.rarity-common {
+            border: 2px solid #9e9e9e;
+            box-shadow: 0 0 6px rgba(158, 158, 158, 0.4);
+        }
+
+        .available-item-icon.rarity-uncommon {
+            border: 2px solid #4caf50;
+            box-shadow: 0 0 6px rgba(76, 175, 80, 0.4);
+        }
+
+        .available-item-icon.rarity-rare {
+            border: 2px solid #2196f3;
+            box-shadow: 0 0 6px rgba(33, 150, 243, 0.4);
+        }
+
+        .available-item-icon.rarity-epic {
+            border: 2px solid #9c27b0;
+            box-shadow: 0 0 6px rgba(156, 39, 176, 0.4);
+        }
+
+        .available-item-icon.rarity-exotic {
+            border: 2px solid #ff4e4e;
+            box-shadow: 0 0 6px rgba(255, 78, 78, 0.4);
+        }
+
+        .available-item-icon.rarity-legendary {
+            border: 2px solid #ff9800;
+            box-shadow: 0 0 6px rgba(255, 152, 0, 0.4);
+        }
+
+        .available-item-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .available-item h4 {
+            color: #64ffda;
+            margin-bottom: 5px;
+            font-size: 1em;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        /* Rarity colors for item names */
+        .available-item h4.rarity-common { color: #9e9e9e; }
+        .available-item h4.rarity-uncommon { color: #4caf50; }
+        .available-item h4.rarity-rare { color: #2196f3; }
+        .available-item h4.rarity-epic { color: #9c27b0; }
+        .available-item h4.rarity-exotic { color: #ff4e4e; }
+        .available-item h4.rarity-legendary { color: #ff9800; }
+
+        .available-item-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            opacity: 0;
+            transform: translateX(20px);
+            transition: all 0.3s ease;
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%) translateX(20px);
+            background: rgba(20, 25, 40, 0.95);
+            padding: 8px;
+            border-radius: 6px;
+        }
+
+        .available-item:hover .available-item-controls {
+            opacity: 1;
+            transform: translateY(-50%) translateX(0);
+        }
+
+        .quantity-input {
+            width: 60px;
+            padding: 5px 8px;
+            background: rgba(45, 55, 75, 0.8);
+            border: 1px solid #4a5568;
+            border-radius: 4px;
+            color: #e0e0e0;
+            text-align: center;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, #2d3748 0%, #1a202c 100%);
+            margin: 5% auto;
+            padding: 30px;
+            border: 2px solid #64ffda;
+            border-radius: 15px;
+            width: 80%;
+            max-width: 600px;
+            color: #e0e0e0;
+            box-shadow: 0 20px 60px rgba(100, 255, 218, 0.3);
+        }
+
+        .close {
+            color: #a0aec0;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .close:hover {
+            color: #64ffda;
+        }
+
+        .status-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(20, 25, 40, 0.95);
+            padding: 15px;
+            border-top: 2px solid #4a5568;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            backdrop-filter: blur(10px);
+            z-index: 900;
+        }
+
+        .status-text {
+            color: #a0aec0;
+        }
+
+        .connection-status {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .status-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #ff6b6b;
+            animation: pulse 2s infinite;
+        }
+
+        .status-indicator.connected {
+            background: #64ffda;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 200px;
+            color: #64ffda;
+            font-size: 1.2em;
+        }
+
+        .spinner {
+            border: 3px solid rgba(100, 255, 218, 0.3);
+            border-top: 3px solid #64ffda;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin-right: 15px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .scrollbar-style {
+            scrollbar-width: thin;
+            scrollbar-color: #64ffda rgba(45, 55, 75, 0.8);
+        }
+
+        .scrollbar-style::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .scrollbar-style::-webkit-scrollbar-track {
+            background: rgba(45, 55, 75, 0.8);
+            border-radius: 4px;
+        }
+
+        .scrollbar-style::-webkit-scrollbar-thumb {
+            background: #64ffda;
+            border-radius: 4px;
+        }
+
+        .scrollbar-style::-webkit-scrollbar-thumb:hover {
+            background: #4fd1c7;
+        }
+
+        .item-detail-modal {
+            text-align: center;
+        }
+
+        .item-detail-icon {
+            width: 100px;
+            height: 100px;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            margin: 0 auto 20px auto;
+            border: 2px solid #4a5568;
+            border-radius: 8px;
+        }
+
+        .durability-slider-container {
+            margin: 20px 0;
+            padding: 15px;
+            background: rgba(45, 55, 75, 0.5);
+            border-radius: 8px;
+        }
+
+        .durability-slider {
+            width: 100%;
+            margin: 10px 0;
+            appearance: none;
+            -webkit-appearance: none;
+            height: 8px;
+            border-radius: 4px;
+            background: rgba(100, 255, 218, 0.3);
+            outline: none;
+        }
+
+        .durability-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #64ffda;
+            cursor: pointer;
+        }
+
+        .durability-slider::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #64ffda;
+            cursor: pointer;
+            border: none;
+        }
+
+        .durability-value {
+            color: #64ffda;
+            font-weight: bold;
+        }
+
+        .auto-save-indicator {
+            background: rgba(76, 175, 80, 0.8);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 0.8em;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .auto-save-indicator.show {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <h2>FILTERS</h2>
+            
+            <div class="filter-section">
+                <h3>Categories</h3>
+                <button class="category-btn active" data-category="all">ALL</button>
+                <button class="category-btn" data-category="weapons">WEAPONS</button>
+                <button class="category-btn" data-category="ammo">AMMO</button>
+                <button class="category-btn" data-category="armor">ARMOR</button>
+                <button class="category-btn" data-category="consumables">CONSUMABLES</button>
+                <button class="category-btn" data-category="materials">MATERIALS</button>
+                <button class="category-btn" data-category="tools">TOOLS</button>
+                <button class="category-btn" data-category="attachments">ATTACHMENTS</button>
+            </div>
+
+            <div class="filter-section">
+                <h3>Actions</h3>
+                <button class="filter-btn" id="add-item-btn">Browse Items</button>
+                <button class="filter-btn" id="clear-inventory">Clear All</button>
+                <button class="filter-btn" id="backup-save">Export Backup</button>
+                <button class="filter-btn" id="restore-save">Import Backup</button>
+            </div>
+        </div>
+
+        <div class="main-content" id="main-content">
+            <div class="header">
+                <h1>The Cycle: Reborn - Save Editor</h1>
+                <div class="header-buttons">
+                    <div class="auto-save-indicator" id="auto-save-indicator">Auto-saved!</div>
+                </div>
+            </div>
+
+            <div class="search-container">
+                <input type="text" class="search-input" id="search-items" placeholder="Search items by name or ID...">
+            </div>
+
+            <div id="inventory-container">
+                <h3 style="color: #64ffda; margin-bottom: 15px;">Current Inventory (Stash)</h3>
+                <div class="inventory-grid scrollbar-style" id="inventory-grid">
+                    <div class="loading">
+                        <div class="spinner"></div>
+                        Connecting and loading inventory...
+                    </div>
+                </div>
+            </div>
+
+            <div id="available-items-container" style="display: none;">
+                <h3 style="color: #64ffda; margin-bottom: 15px; margin-top: 30px;">Available Items</h3>
+                <div class="available-items" id="available-items">
+                    <!-- Available items will be populated here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for item details -->
+    <div id="item-detail-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div class="item-detail-modal" id="modal-item-details">
+                <!-- Item details will be populated here -->
+            </div>
+        </div>
+    </div>
+
+    <div class="status-bar">
+        <div class="status-text" id="status-text">Auto-connecting to database...</div>
+        <div class="connection-status">
+            <div class="status-indicator" id="connection-indicator"></div>
+            <span id="connection-text">Connecting...</span>
+        </div>
+    </div>
+
+    <script>
+        class CycleRebornEditor {
+            constructor() {
+                this.inventory = [];
+                this.availableItems = [];
+                this.itemConfigs = {};
+                this.selectedCategory = 'all';
+                this.isConnected = false;
+                this.currentFilter = '';
+                this.apiBaseUrl = '/api';
+                this.autoSaveTimeout = null;
+                
+                this.init();
+                this.bindEvents();
+            }
+
+            async init() {
+                this.updateStatus('Auto-connecting to database...');
+                await this.loadItemConfigs();
+                await this.loadAvailableItems();
+                // Auto-connect and load
+                this.autoConnectAndLoad();
+            }
+
+            async loadItemConfigs() {
+                try {
+                    const response = await fetch('./icons/!itemConfigs.json');
+                    if (response.ok) {
+                        const data = await response.json();
+                        this.itemConfigs = data.itemConfigs || {};
+                        this.rarityColors = data.rarityColors || {};
+                        console.log(`Loaded ${Object.keys(this.itemConfigs).length} item configurations`);
+                    } else {
+                        console.warn('Could not load itemConfigs.json');
+                        this.createFallbackConfigs();
+                    }
+                } catch (error) {
+                    console.error('Error loading item configs:', error);
+                    this.createFallbackConfigs();
+                }
+            }
+
+            createFallbackConfigs() {
+                this.itemConfigs = {
+                    "Consumable_Health_01": { displayName: "Weak Stim", category: "consumables", rarity: "common", maxDurability: -1, icon: "Weak Stim.png" },
+                    "Shield_01": { displayName: "Basic Shield", category: "armor", rarity: "common", maxDurability: 500, icon: "Basic Shields.png" },
+                    "WP_E_AR_Energy_01": { displayName: "AR-55", category: "weapons", rarity: "common", maxDurability: 1000, icon: "AR-55 Autorifle.png" }
+                };
+                this.rarityColors = {
+                    common: "#9e9e9e",
+                    uncommon: "#4caf50", 
+                    rare: "#2196f3",
+                    epic: "#9c27b0",
+                    exotic: "#ff4e4e",
+                    legendary: "#ff9800"
+                };
+            }
+
+            async autoConnectAndLoad() {
+                try {
+                    await this.connectToDatabase();
+                    await this.loadInventory();
+                } catch (error) {
+                    console.error('Auto-connect failed:', error);
+                    this.updateStatus('Auto-connect failed - check connection');
+                }
+            }
+
+            bindEvents() {
+                // Category filters
+                document.querySelectorAll('.category-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+                        e.target.classList.add('active');
+                        this.selectedCategory = e.target.dataset.category;
+                        this.renderInventory();
+                        this.filterAvailableItems();
+                    });
+                });
+
+                // Action buttons
+                document.getElementById('add-item-btn').addEventListener('click', () => this.toggleAvailableItems());
+                document.getElementById('clear-inventory').addEventListener('click', () => this.clearInventory());
+                document.getElementById('backup-save').addEventListener('click', () => this.exportBackup());
+                document.getElementById('restore-save').addEventListener('click', () => this.importBackup());
+
+                // Search
+                document.getElementById('search-items').addEventListener('input', (e) => {
+                    this.currentFilter = e.target.value.toLowerCase();
+                    this.renderInventory();
+                    this.filterAvailableItems();
+                });
+
+                // Modal
+                document.querySelector('.close').addEventListener('click', () => this.closeModal());
+                
+                window.addEventListener('click', (e) => {
+                    if (e.target.classList.contains('modal')) {
+                        this.closeModal();
+                    }
+                });
+            }
+
+            async connectToDatabase() {
+                this.updateStatus('Connecting to MongoDB...');
+                try {
+                    const response = await fetch(`${this.apiBaseUrl}/connect`, {
+                        method: 'POST'
+                    });
+                    
+                    const data = await response.json();
+                    
+                    if (response.ok && data.success) {
+                        this.isConnected = true;
+                        this.updateConnectionStatus(true);
+                        this.updateStatus('Connected successfully');
+                        console.log('Connection details:', data);
+                    } else {
+                        throw new Error(data.message || 'Failed to connect to database');
+                    }
+                } catch (error) {
+                    console.error('Connection error:', error);
+                    this.updateStatus(`Connection failed: ${error.message}`);
+                    this.updateConnectionStatus(false);
+                    throw error;
+                }
+            }
+
+            async loadAvailableItems() {
+                try {
+                    const response = await fetch('./itemIds.json');
+                    if (response.ok) {
+                        this.availableItems = await response.json();
+                        this.updateStatus('Item database loaded');
+                        console.log(`Loaded ${this.availableItems.length} available items`);
+                    } else {
+                        this.updateStatus('Warning: Could not load itemIds.json - using fallback data');
+                        this.createFallbackItems();
+                    }
+                } catch (error) {
+                    console.error('Error loading available items:', error);
+                    this.updateStatus('Warning: Could not load itemIds.json - using fallback data');
+                    this.createFallbackItems();
+                }
+            }
+
+            createFallbackItems() {
+                this.availableItems = [
+                    { baseItemId: "Consumable_Health_01" },
+                    { baseItemId: "Shield_01" },
+                    { baseItemId: "WP_E_AR_Energy_01" }
+                ];
+            }
+
+            async loadInventory() {
+                this.updateStatus('Loading inventory...');
+                try {
+                    const response = await fetch(`${this.apiBaseUrl}/inventory`);
+                    if (response.ok) {
+                        const data = await response.json();
+                        
+                        if (Array.isArray(data)) {
+                            this.inventory = data;
+                        } else if (data && Array.isArray(data.inventory)) {
+                            this.inventory = data.inventory;
+                        } else {
+                            console.warn('Unexpected response format:', data);
+                            this.inventory = [];
+                        }
+                        
+                        this.renderInventory();
+                        this.updateStatus(`Inventory loaded - ${this.inventory.length} items found`);
+                        console.log('Loaded inventory:', this.inventory);
+                    } else {
+                        const errorData = await response.json().catch(() => ({ message: 'Unknown error' }));
+                        throw new Error(errorData.message || 'Failed to load inventory');
+                    }
+                } catch (error) {
+                    console.error('Load inventory error:', error);
+                    this.updateStatus(`Load failed: ${error.message}`);
+                    this.generateEmptyInventory();
+                }
+            }
+
+            async saveInventory() {
+                if (!this.isConnected) {
+                    return;
+                }
+
+                try {
+                    const response = await fetch(`${this.apiBaseUrl}/inventory`, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(this.inventory)
+                    });
+
+                    const data = await response.json();
+                    
+                    if (response.ok && data.success) {
+                        this.showAutoSaveIndicator();
+                        console.log('Auto-saved inventory');
+                    } else {
+                        console.error('Save failed:', data.message);
+                    }
+                } catch (error) {
+                    console.error('Save inventory error:', error);
+                }
+            }
+
+            autoSave() {
+                if (this.autoSaveTimeout) {
+                    clearTimeout(this.autoSaveTimeout);
+                }
+                
+                this.autoSaveTimeout = setTimeout(() => {
+                    this.saveInventory();
+                }, 1000);
+            }
+
+            showAutoSaveIndicator() {
+                const indicator = document.getElementById('auto-save-indicator');
+                indicator.classList.add('show');
+                setTimeout(() => {
+                    indicator.classList.remove('show');
+                }, 2000);
+            }
+
+            generateEmptyInventory() {
+                this.inventory = [];
+                this.renderInventory();
+            }
+
+            renderInventory() {
+                const grid = document.getElementById('inventory-grid');
+                grid.innerHTML = '';
+
+                if (!Array.isArray(this.inventory)) {
+                    console.warn('Inventory is not an array:', this.inventory);
+                    this.inventory = [];
+                }
+
+                let filteredInventory = this.inventory.filter(item => {
+                    if (!item || !item.baseItemId) return false;
+                    
+                    const config = this.getItemConfig(item.baseItemId);
+                    const matchesCategory = this.selectedCategory === 'all' || config.category === this.selectedCategory;
+                    const matchesSearch = !this.currentFilter || 
+                        item.baseItemId.toLowerCase().includes(this.currentFilter) ||
+                        config.displayName.toLowerCase().includes(this.currentFilter);
+                    return matchesCategory && matchesSearch;
+                });
+
+                filteredInventory.forEach((item, index) => {
+                    const slot = document.createElement('div');
+                    slot.className = 'item-slot';
+                    
+                    const config = this.getItemConfig(item.baseItemId);
+                    const iconPath = this.getItemIcon(item.baseItemId);
+                    
+                    slot.innerHTML = `
+                        <div class="item-image rarity-${config.rarity}" style="background-image: url('${iconPath}')"></div>
+                        <div class="item-name">${config.displayName}</div>
+                        <div class="item-amount">${item.amount || 1}</div>
+                    `;
+                    
+                    slot.addEventListener('click', () => this.showItemDetail(item, this.inventory.indexOf(item)));
+                    grid.appendChild(slot);
+                });
+
+                const totalSlotsToShow = Math.max(50, filteredInventory.length + 10);
+                for (let i = filteredInventory.length; i < totalSlotsToShow; i++) {
+                    const slot = document.createElement('div');
+                    slot.className = 'item-slot empty';
+                    slot.innerHTML = '<div class="item-image placeholder">+</div>';
+                    grid.appendChild(slot);
+                }
+            }
+
+            toggleAvailableItems() {
+                const container = document.getElementById('available-items-container');
+                const mainContent = document.getElementById('main-content');
+                const isVisible = container.style.display !== 'none';
+                
+                container.style.display = isVisible ? 'none' : 'block';
+                
+                if (!isVisible) {
+                    this.filterAvailableItems();
+                    mainContent.classList.add('hide-scrollbar');
+                } else {
+                    mainContent.classList.remove('hide-scrollbar');
+                }
+            }
+
+            filterAvailableItems() {
+                const container = document.getElementById('available-items');
+                container.innerHTML = '';
+
+                let filteredItems = this.availableItems.filter(item => {
+                    const config = this.getItemConfig(item.baseItemId);
+                    const matchesCategory = this.selectedCategory === 'all' || config.category === this.selectedCategory;
+                    const matchesSearch = !this.currentFilter || 
+                        config.displayName.toLowerCase().includes(this.currentFilter) ||
+                        item.baseItemId.toLowerCase().includes(this.currentFilter);
+                    return matchesCategory && matchesSearch;
+                });
+
+                filteredItems.forEach(item => {
+                    const config = this.getItemConfig(item.baseItemId);
+                    const itemDiv = document.createElement('div');
+                    itemDiv.className = 'available-item';
+                    
+                    const iconPath = this.getItemIcon(item.baseItemId);
+                    
+                    itemDiv.innerHTML = `
+                        <div class="available-item-icon rarity-${config.rarity}" style="background-image: url('${iconPath}')"></div>
+                        <div class="available-item-info">
+                            <h4 class="rarity-${config.rarity}">${config.displayName}</h4>
+                        </div>
+                        <div class="available-item-controls">
+                            <input type="number" class="quantity-input" value="1" min="1" max="999">
+                            <button class="btn btn-primary">Add</button>
+                        </div>
+                    `;
+                    
+                    const addButton = itemDiv.querySelector('.btn');
+                    const quantityInput = itemDiv.querySelector('.quantity-input');
+                    
+                    addButton.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        const quantity = parseInt(quantityInput.value) || 1;
+                        this.addItemToInventory(item.baseItemId, quantity);
+                    });
+                    
+                    container.appendChild(itemDiv);
+                });
+            }
+
+            addItemToInventory(baseItemId, quantity) {
+                const amount = parseInt(quantity) || 1;
+                
+                const existingItem = this.inventory.find(item => item.baseItemId === baseItemId);
+                
+                if (existingItem) {
+                    existingItem.amount = (existingItem.amount || 1) + amount;
+                } else {
+                    const config = this.getItemConfig(baseItemId);
+                    this.inventory.push({
+                        itemId: this.generateUUID(),
+                        baseItemId: baseItemId,
+                        primaryVanityId: 0,
+                        secondaryVanityId: 0,
+                        amount: amount,
+                        durability: config.maxDurability,
+                        modData: { m: [] },
+                        rolledPerks: [],
+                        insurance: "",
+                        insuranceOwnerPlayfabId: "",
+                        insuredAttachmentId: "",
+                        origin: { t: "", p: "", g: "" }
+                    });
+                }
+
+                this.renderInventory();
+                this.autoSave();
+                this.updateStatus(`Added ${amount}x ${config.displayName} to inventory`);
+            }
+
+            showItemDetail(item, index) {
+                const modal = document.getElementById('item-detail-modal');
+                const detailsDiv = document.getElementById('modal-item-details');
+                
+                const config = this.getItemConfig(item.baseItemId);
+                const iconPath = this.getItemIcon(item.baseItemId);
+                const showDurability = config.maxDurability > 0;
+                
+                let durabilitySlider = '';
+                if (showDurability) {
+                    const currentDurability = item.durability === -1 ? config.maxDurability : item.durability;
+                    durabilitySlider = `
+                        <div class="durability-slider-container">
+                            <label for="durability-slider">Durability: <span class="durability-value">${currentDurability}</span>/${config.maxDurability}</label>
+                            <input type="range" id="durability-slider" class="durability-slider" 
+                                   min="1" max="${config.maxDurability}" value="${currentDurability}"
+                                   oninput="editor.updateDurabilityDisplay(this.value, ${config.maxDurability})">
+                        </div>
+                    `;
+                }
+                
+                detailsDiv.innerHTML = `
+                    <div class="item-detail-icon rarity-${config.rarity}" style="background-image: url('${iconPath}')"></div>
+                    <h2 style="color: ${this.rarityColors[config.rarity] || '#64ffda'}; margin-bottom: 20px;">${config.displayName}</h2>
+                    <p><strong>Base Item ID:</strong> ${item.baseItemId}</p>
+                    <p><strong>Rarity:</strong> <span style="color: ${this.rarityColors[config.rarity] || '#64ffda'}">${config.rarity.charAt(0).toUpperCase() + config.rarity.slice(1)}</span></p>
+                    <p><strong>Current Amount:</strong> ${item.amount || 1}</p>
+                    ${showDurability ? `<p><strong>Durability:</strong> ${item.durability === -1 ? 'Full' : item.durability}</p>` : ''}
+                    <div style="margin-top: 20px;">
+                        <label for="edit-quantity">Edit Quantity:</label>
+                        <input type="number" id="edit-quantity" class="quantity-input" value="${item.amount || 1}" min="0" max="999" style="margin: 0 10px;">
+                        <button class="btn btn-success" onclick="editor.updateItemQuantity(${index}, document.getElementById('edit-quantity').value)">Update</button>
+                        <button class="btn btn-danger" onclick="editor.removeItem(${index})" style="margin-left: 10px;">Remove</button>
+                    </div>
+                    ${durabilitySlider}
+                `;
+                
+                modal.style.display = 'block';
+                this.currentEditingItemIndex = index;
+            }
+
+            updateDurabilityDisplay(value, max) {
+                const display = document.querySelector('.durability-value');
+                if (display) {
+                    display.textContent = value;
+                }
+                
+                if (this.currentEditingItemIndex !== undefined && this.inventory[this.currentEditingItemIndex]) {
+                    this.inventory[this.currentEditingItemIndex].durability = parseInt(value);
+                    this.autoSave();
+                }
+            }
+
+            updateItemQuantity(index, newQuantity) {
+                const quantity = parseInt(newQuantity);
+                if (quantity <= 0) {
+                    this.removeItem(index);
+                } else {
+                    if (this.inventory[index]) {
+                        this.inventory[index].amount = quantity;
+                        this.renderInventory();
+                        this.closeModal();
+                        this.autoSave();
+                        this.updateStatus(`Updated item quantity to ${quantity}`);
+                    }
+                }
+            }
+
+            removeItem(index) {
+                if (this.inventory[index]) {
+                    const item = this.inventory[index];
+                    const config = this.getItemConfig(item.baseItemId);
+                    if (confirm(`Remove ${item.amount || 1}x ${config.displayName} from inventory?`)) {
+                        this.inventory.splice(index, 1);
+                        this.renderInventory();
+                        this.closeModal();
+                        this.autoSave();
+                        this.updateStatus(`Removed ${config.displayName} from inventory`);
+                    }
+                }
+            }
+
+            clearInventory() {
+                if (confirm('Are you sure you want to clear the entire inventory?')) {
+                    this.inventory = [];
+                    this.renderInventory();
+                    this.autoSave();
+                    this.updateStatus('Inventory cleared');
+                }
+            }
+
+            exportBackup() {
+                const backup = {
+                    timestamp: new Date().toISOString(),
+                    inventory: this.inventory
+                };
+                
+                const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `cycle_reborn_backup_${new Date().toISOString().split('T')[0]}.json`;
+                a.click();
+                URL.revokeObjectURL(url);
+                this.updateStatus('Backup exported successfully');
+            }
+
+            importBackup() {
+                const input = document.createElement('input');
+                input.type = 'file';
+                input.accept = '.json';
+                input.onchange = (e) => {
+                    const file = e.target.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = (e) => {
+                            try {
+                                const backup = JSON.parse(e.target.result);
+                                if (backup.inventory && Array.isArray(backup.inventory)) {
+                                    this.inventory = backup.inventory;
+                                    this.renderInventory();
+                                    this.autoSave();
+                                    this.updateStatus('Backup imported successfully');
+                                } else {
+                                    throw new Error('Invalid backup format');
+                                }
+                            } catch (error) {
+                                this.updateStatus('Error: Invalid backup file format');
+                            }
+                        };
+                        reader.readAsText(file);
+                    }
+                };
+                input.click();
+            }
+
+            closeModal() {
+                document.getElementById('item-detail-modal').style.display = 'none';
+                this.currentEditingItemIndex = undefined;
+            }
+
+            getItemConfig(baseItemId) {
+                if (this.itemConfigs[baseItemId]) {
+                    return this.itemConfigs[baseItemId];
+                }
+                
+                // Fallback config
+                return {
+                    displayName: this.cleanDisplayName(baseItemId),
+                    category: this.guessCategory(baseItemId),
+                    rarity: 'common',
+                    maxDurability: this.guessMaxDurability(baseItemId),
+                    icon: this.getDefaultIcon(baseItemId)
+                };
+            }
+
+            guessCategory(baseItemId) {
+                const id = baseItemId.toLowerCase();
+                if (id.includes('wp_')) return 'weapons';
+                if (id.includes('consumable')) return 'consumables';
+                if (id.includes('shield') || id.includes('helmet') || id.includes('bag')) return 'armor';
+                if (id.includes('light') || id.includes('medium') || id.includes('heavy') || id.includes('shotgun') || id.includes('special')) return 'ammo';
+                if (id.includes('tool') || id.includes('scanner')) return 'tools';
+                if (id.includes('mod_')) return 'attachments';
+                return 'materials';
+            }
+
+            guessMaxDurability(baseItemId) {
+                const id = baseItemId.toLowerCase();
+                if (id.includes('wp_')) return 1000;
+                if (id.includes('helmet')) return 600;
+                if (id.includes('shield')) return 500;
+                if (id.includes('tool')) return 500;
+                return -1;
+            }
+
+            cleanDisplayName(name) {
+                return name
+                    .replace(/^(WP_[A-Z]_|TOOL_|Mod_|Consumable_)/g, '')
+                    .replace(/_+/g, ' ')
+                    .replace(/\b\w+/g, word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+                    .replace(/\s+/g, ' ')
+                    .trim();
+            }
+
+            getItemIcon(baseItemId) {
+                const config = this.getItemConfig(baseItemId);
+                if (config.icon && config.icon !== this.getDefaultIcon(baseItemId)) {
+                    return `./public/icons/${config.icon}`;
+                }
+                return this.createPlaceholderIcon(baseItemId);
+            }
+
+            getDefaultIcon(baseItemId) {
+                return `${baseItemId.substring(0, 8)}.png`;
+            }
+
+            createPlaceholderIcon(baseItemId) {
+                return `data:image/svg+xml;base64,${btoa(`
+                    <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 60 60">
+                        <rect width="60" height="60" fill="#4a5568"/>
+                        <text x="30" y="35" text-anchor="middle" fill="#e0e0e0" font-family="Arial" font-size="8">
+                            ${baseItemId.substring(0, 8)}
+                        </text>
+                    </svg>
+                `)}`;
+            }
+
+            generateUUID() {
+                return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+                    const r = Math.random() * 16 | 0;
+                    const v = c === 'x' ? r : (r & 0x3 | 0x8);
+                    return v.toString(16);
+                });
+            }
+
+            updateStatus(message) {
+                document.getElementById('status-text').textContent = message;
+                console.log(message);
+            }
+
+            updateConnectionStatus(connected) {
+                const indicator = document.getElementById('connection-indicator');
+                const text = document.getElementById('connection-text');
+                
+                if (connected) {
+                    indicator.classList.add('connected');
+                    text.textContent = 'Connected';
+                } else {
+                    indicator.classList.remove('connected');
+                    text.textContent = 'Disconnected';
+                }
+            }
+        }
+
+        // Initialize the editor
+        const editor = new CycleRebornEditor();
+    </script>
+</body>
+</html>
