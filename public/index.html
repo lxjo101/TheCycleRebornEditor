@@ -1189,13 +1189,19 @@
             filterAvailableItems() {
                 const container = document.getElementById('available-items');
                 container.innerHTML = '';
-
-                let filteredItems = this.availableItems.filter(item => {
-                    // Only show items that exist in itemConfigs
-                    if (!this.itemConfigs[item.baseItemId]) {
-                        return false;
+                        
+                // First, deduplicate items by baseItemId
+                const uniqueItems = [];
+                const seenIds = new Set();
+                        
+                this.availableItems.forEach(item => {
+                    if (!seenIds.has(item.baseItemId) && this.itemConfigs[item.baseItemId]) {
+                        uniqueItems.push(item);
+                        seenIds.add(item.baseItemId);
                     }
-                    
+                });
+            
+                let filteredItems = uniqueItems.filter(item => {
                     const config = this.getItemConfig(item.baseItemId);
                     const matchesCategory = this.selectedCategory === 'all' || config.category === this.selectedCategory;
                     const matchesSearch = !this.currentFilter || 
@@ -1203,7 +1209,6 @@
                         item.baseItemId.toLowerCase().includes(this.currentFilter);
                     return matchesCategory && matchesSearch;
                 });
-
                 filteredItems.forEach(item => {
                     const config = this.getItemConfig(item.baseItemId);
                     const itemDiv = document.createElement('div');
