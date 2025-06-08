@@ -979,7 +979,10 @@
 
     <div class="status-bar">
         <div class="status-text" id="status-text">Auto-connecting to database...</div>
-        <div class="status-center">made by lxjo</div>
+        <div class="status-center">
+            <span style="color: rgba(160, 174, 192, 0.6); font-size: 0.8em;">made by lxjo</span>
+            <span id="user-stats" style="color: rgba(100, 255, 218, 0.6); font-size: 0.7em; margin-left: 10px; display: none;"></span>
+        </div>
         <div class="connection-status">
             <div class="status-indicator" id="connection-indicator"></div>
             <span id="connection-text">Connecting...</span>
@@ -1002,6 +1005,8 @@
                 
                 this.init();
                 this.bindEvents();
+                this.userStats = { totalUsers: 0, activeUsers: 0 };
+                this.statsUpdateInterval = null;
             }
 
             async init() {
@@ -1010,6 +1015,11 @@
                 await this.loadAvailableItems();
                 // Auto-connect and load
                 this.autoConnectAndLoad();
+            }
+            
+            async testStats() {
+                console.log('Testing stats manually...');
+                await this.pingUserStats();
             }
 
             async loadItemConfigs() {
@@ -1056,6 +1066,10 @@
                 try {
                     await this.connectToDatabase();
                     await this.loadInventory();
+
+                    // Start stats tracking AFTER database connection
+                    this.startStatsUpdates();
+
                 } catch (error) {
                     console.error('Auto-connect failed:', error);
                     this.updateStatus('Auto-connect failed - check connection');
@@ -1822,6 +1836,44 @@
                     indicator.classList.remove('connected');
                     text.textContent = 'Disconnected';
                 }
+            }
+
+            async pingUserStats() {
+                try {
+                    const response = await fetch(`${this.apiBaseUrl}/user/ping`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ version: '1.0.0' })
+                    });
+
+                    if (response.ok) {
+                        const data = await response.json();
+                        if (data.success && data.stats) {
+                            this.userStats = data.stats;
+                            this.updateStatsDisplay();
+                        }
+                    }
+                } catch (error) {
+                    console.log('Stats update failed (non-critical):', error.message);
+                }
+            }
+
+            updateStatsDisplay() {
+                const statsElement = document.getElementById('user-stats');
+                if (statsElement && this.userStats.totalUsers > 0) {
+                    statsElement.textContent = `${this.userStats.totalUsers} users`;
+                    statsElement.style.display = 'block';
+                }
+            }
+
+            startStatsUpdates() {
+                // Initial ping
+                this.pingUserStats();
+
+                // Update every 5 minutes
+                this.statsUpdateInterval = setInterval(() => {
+                    this.pingUserStats();
+                }, 5 * 60 * 1000);
             }
         }
 

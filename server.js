@@ -2,6 +2,8 @@ const express = require('express');
 const { MongoClient, ObjectId } = require('mongodb');
 const cors = require('cors');
 const path = require('path');
+const crypto = require('crypto');
+const os = require('os');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -15,6 +17,21 @@ const INVENTORY_KEY = process.env.INVENTORY_KEY || 'Inventory'; // The key we're
 let db = null;
 let client = null;
 
+let userStats = {
+    totalUsers: 0,
+    activeUsers: 0,
+    lastUpdated: new Date().toISOString()
+};
+
+// Generate anonymous user ID
+function generateAnonymousId() {
+    const machineId = crypto.createHash('sha256')
+        .update(os.hostname() + os.platform() + os.arch())
+        .digest('hex')
+        .substring(0, 16);
+    return machineId;
+}
+
 // Middleware
 app.use(cors());
 app.use(express.json({ limit: '10mb' }));
@@ -23,6 +40,71 @@ app.use(express.static(path.join(__dirname, 'public'))); // Serve static files f
 // Serve the main HTML file
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
+// Register/ping user endpoint
+app.post('/api/user/ping', async (req, res) => {
+    try {
+        const anonymousId = generateAnonymousId();
+        
+        if (!db) {
+            return res.status(400).json({ 
+                success: false, 
+                message: 'Database not connected' 
+            });
+        }
+
+        const statsCollection = db.collection('UserStats');
+        const now = new Date();
+        const fiveMinutesAgo = new Date(now.getTime() - 5 * 60 * 1000);
+
+        // Update or create user record
+        await statsCollection.updateOne(
+            { userId: anonymousId },
+            { 
+                $set: { 
+                    lastSeen: now,
+                    version: req.body.version || '1.0.0'
+                }
+            },
+            { upsert: true }
+        );
+
+        // Count total unique users
+        const totalUsers = await statsCollection.countDocuments();
+        
+        // Count active users (seen in last 5 minutes)
+        const activeUsers = await statsCollection.countDocuments({
+            lastSeen: { $gte: fiveMinutesAgo }
+        });
+
+        userStats = {
+            totalUsers,
+            activeUsers,
+            lastUpdated: now.toISOString()
+        };
+
+        res.json({ 
+            success: true, 
+            stats: userStats,
+            yourId: anonymousId.substring(0, 8) // Show first 8 chars for debugging
+        });
+    } catch (error) {
+        console.error('Error updating user stats:', error);
+        res.status(500).json({ 
+            success: false, 
+            message: 'Failed to update user stats',
+            stats: userStats // Return cached stats on error
+        });
+    }
+});
+
+// Get user stats endpoint
+app.get('/api/user/stats', (req, res) => {
+    res.json({ 
+        success: true, 
+        stats: userStats 
+    });
 });
 
 // Connect to MongoDB
