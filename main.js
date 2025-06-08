@@ -312,5 +312,235 @@ ipcMain.handle('show-open-dialog', async (event, options) => {
   return result;
 });
 
+// Game launcher configuration storage
+const gameConfigPath = path.join(__dirname, 'gameConfig.json');
+
+function loadGameConfig() {
+  try {
+    if (fs.existsSync(gameConfigPath)) {
+      const data = fs.readFileSync(gameConfigPath, 'utf8');
+      return JSON.parse(data);
+    }
+  } catch (error) {
+    console.error('Error loading game config:', error);
+  }
+  return { gamePath: null, serverPath: null };
+}
+
+function saveGameConfig(config) {
+  try {
+    fs.writeFileSync(gameConfigPath, JSON.stringify(config, null, 2));
+    console.log('Game config saved:', config);
+  } catch (error) {
+    console.error('Error saving game config:', error);
+  }
+}
+
+// Simplified game launcher IPC handlers
+ipcMain.handle('launch-game', async () => {
+  try {
+    console.log('=== STARTING GAME LAUNCH ===');
+    
+    // Load saved configuration
+    let gameConfig = loadGameConfig();
+    console.log('Loaded config:', gameConfig);
+    
+    let gamePath = gameConfig.gamePath;
+    let serverPath = gameConfig.serverPath;
+    
+    console.log('Initial paths:');
+    console.log('  gamePath:', gamePath);
+    console.log('  serverPath:', serverPath);
+    
+    // If no saved paths, try to get them from user
+    if (!gamePath || !serverPath) {
+      console.log('No saved paths, asking user...');
+      
+      // First, select the server API executable
+      const serverResult = await dialog.showOpenDialog(mainWindow, {
+        title: 'Select Prospect.Server.Api.exe',
+        defaultPath: 'C:\\',
+        filters: [{ name: 'Executable Files', extensions: ['exe'] }],
+        properties: ['openFile']
+      });
+
+      if (serverResult.canceled || !serverResult.filePaths.length) {
+        console.log('User cancelled server selection');
+        return { success: false, message: 'Server executable not selected' };
+      }
+
+      serverPath = serverResult.filePaths[0];
+      console.log('User selected server:', serverPath);
+
+      // Then, select the game folder
+      const folderResult = await dialog.showOpenDialog(mainWindow, {
+        title: 'Select The Cycle Frontier game folder (contains Prospect folder)',
+        defaultPath: 'C:\\',
+        properties: ['openDirectory']
+      });
+
+      if (folderResult.canceled || !folderResult.filePaths.length) {
+        console.log('User cancelled game folder selection');
+        return { success: false, message: 'Game folder not selected' };
+      }
+
+      gamePath = folderResult.filePaths[0];
+      console.log('User selected game folder:', gamePath);
+
+      // Save both paths
+      saveGameConfig({ 
+        gamePath: gamePath,
+        serverPath: serverPath 
+      });
+    }
+
+    // Build client path
+    const clientPath = path.join(gamePath, 'Prospect', 'Binaries', 'Win64', 'Prospect.Client.Loader.exe');
+
+    console.log('Final paths:');
+    console.log('  serverPath:', serverPath);
+    console.log('  clientPath:', clientPath);
+    console.log('  gamePath:', gamePath);
+
+    // Check that all files exist
+    if (!fs.existsSync(serverPath)) {
+      console.log('ERROR: Server not found at:', serverPath);
+      return { success: false, message: `Server not found at: ${serverPath}` };
+    }
+    console.log('✓ Server exists');
+
+    if (!fs.existsSync(clientPath)) {
+      console.log('ERROR: Client not found at:', clientPath);
+      return { success: false, message: `Client not found at: ${clientPath}` };
+    }
+    console.log('✓ Client exists');
+
+    // Test simple command first
+    console.log('Testing simple spawn...');
+    try {
+      const testProcess = spawn('cmd', ['/c', 'echo', 'test'], {
+        detached: false,
+        stdio: 'pipe'
+      });
+      
+      testProcess.stdout.on('data', (data) => {
+        console.log('Test output:', data.toString());
+      });
+      
+      testProcess.on('close', (code) => {
+        console.log('Test process closed with code:', code);
+      });
+      
+      console.log('✓ Basic spawn works');
+    } catch (error) {
+      console.log('ERROR: Basic spawn failed:', error);
+      return { success: false, message: `Basic spawn test failed: ${error.message}` };
+    }
+
+    // Try launching just the server first
+    console.log('Attempting to launch server...');
+    const serverDir = path.dirname(serverPath);
+    console.log('Server directory:', serverDir);
+    
+    try {
+      const serverProcess = spawn(serverPath, [], {
+        detached: true,
+        stdio: ['ignore', 'ignore', 'ignore'],
+        shell: false,
+        cwd: serverDir
+      });
+      
+      console.log('Server spawn successful, PID:', serverProcess.pid);
+      serverProcess.unref();
+      
+      // Wait a moment
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      
+      // Check if process is still running
+      try {
+        process.kill(serverProcess.pid, 0); // Test if process exists
+        console.log('✓ Server process is running');
+      } catch (e) {
+        console.log('WARNING: Server process may have exited');
+      }
+      
+    } catch (error) {
+      console.log('ERROR launching server:', error);
+      return { success: false, message: `Failed to start server: ${error.message}` };
+    }
+
+    // Try launching client
+    console.log('Attempting to launch client...');
+    
+    try {
+      const clientProcess = spawn(clientPath, [], {
+        detached: true,
+        stdio: ['ignore', 'ignore', 'ignore'],
+        shell: false
+      });
+      
+      console.log('Client spawn successful, PID:', clientProcess.pid);
+      clientProcess.unref();
+      
+      // Check if process is still running
+      setTimeout(() => {
+        try {
+          process.kill(clientProcess.pid, 0);
+          console.log('✓ Client process is running');
+        } catch (e) {
+          console.log('WARNING: Client process may have exited');
+        }
+      }, 1000);
+      
+    } catch (error) {
+      console.log('ERROR launching client:', error);
+      return { success: false, message: `Failed to start client: ${error.message}` };
+    }
+
+    console.log('=== LAUNCH COMPLETE ===');
+    return {
+      success: true,
+      message: 'Game launched successfully!'
+    };
+
+  } catch (error) {
+    console.error('FATAL ERROR in launch-game:', error);
+    return {
+      success: false,
+      message: `Fatal error: ${error.message}`
+    };
+  }
+});
+
+ipcMain.handle('configure-game-paths', async () => {
+  try {
+    // Delete saved config to force re-selection
+    if (fs.existsSync(gameConfigPath)) {
+      fs.unlinkSync(gameConfigPath);
+    }
+    
+    // The next launch will prompt for folder selection
+    return true;
+  } catch (error) {
+    console.error('Error clearing game config:', error);
+    return false;
+  }
+});
+
+ipcMain.handle('check-game-configured', async () => {
+  try {
+    const config = loadGameConfig();
+    if (!config.gamePath || !config.serverPath) return false;
+    
+    // Verify the paths still exist and have the required files
+    const clientPath = path.join(config.gamePath, 'Prospect', 'Binaries', 'Win64', 'Prospect.Client.Loader.exe');
+    
+    return fs.existsSync(config.serverPath) && fs.existsSync(clientPath);
+  } catch (error) {
+    console.error('Error checking game configuration:', error);
+    return false;
+  }
+});
+
 // Export for testing
 module.exports = { app, createWindow };

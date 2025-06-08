@@ -48,13 +48,14 @@
             width: 250px;
             background: rgba(20, 25, 40, 0.9);
             padding: 20px;
+            padding-bottom: 120px;
             border-right: 2px solid #4a5568;
             backdrop-filter: blur(10px);
             position: fixed;
             top: 0;
             left: 0;
             height: 100vh;
-            overflow-y: auto;
+            overflow-y: hidden;
             z-index: 50;
         }
 
@@ -892,6 +893,18 @@
                 <button class="filter-btn" id="backup-save">Export Backup</button>
                 <button class="filter-btn" id="restore-save">Import Backup</button>
             </div>
+
+
+            <div class="filter-section">
+                <h3>Game</h3>
+                <button class="filter-btn" id="launch-game-btn">
+                    <span id="launch-game-text">Launch Game</span>
+                </button>
+                <button class="filter-btn" id="configure-game-btn" style="display: none;">
+                    Configure Game Path
+                </button>
+            </div>
+       
         </div>
 
         <div class="main-content" id="main-content">
@@ -1121,6 +1134,89 @@
                         });
                     }
                 });
+
+                // Game launcher events
+                document.getElementById('launch-game-btn').addEventListener('click', () => this.launchGame());
+                document.getElementById('configure-game-btn').addEventListener('click', () => this.configureGamePaths());
+            
+                // Check if game is configured on startup
+                this.checkGameConfiguration();
+            }
+                    
+                    
+            async checkGameConfiguration() {
+                if (window.electronAPI && window.electronAPI.checkGameConfigured) {
+                    try {
+                        const isConfigured = await window.electronAPI.checkGameConfigured();
+                        const configureBtn = document.getElementById('configure-game-btn');
+
+                        if (!isConfigured && configureBtn) {
+                            configureBtn.style.display = 'block';
+                        }
+                    } catch (error) {
+                        console.log('Could not check game configuration:', error);
+                    }
+                }
+            }
+
+            async launchGame() {
+                if (!window.electronAPI || !window.electronAPI.launchGame) {
+                    this.updateStatus('Game launcher not available in web version');
+                    return;
+                }
+            
+                const launchBtn = document.getElementById('launch-game-btn');
+                const launchText = document.getElementById('launch-game-text');
+
+                launchText.textContent = 'Launching...';
+                launchBtn.disabled = true;
+            
+                try {
+                    const result = await window.electronAPI.launchGame();
+
+                    if (result.success) {
+                        this.updateStatus(result.message);
+                        launchText.textContent = 'Game Started!';
+                        setTimeout(() => {
+                            launchText.textContent = 'Launch Game';
+                        }, 3000);
+                    } else {
+                        this.updateStatus(result.message);
+                        launchText.textContent = 'Launch Failed';
+                        setTimeout(() => {
+                            launchText.textContent = 'Launch Game';
+                        }, 3000);
+                    }
+                } catch (error) {
+                    console.error('Error launching game:', error);
+                    this.updateStatus('Failed to launch game');
+                    launchText.textContent = 'Launch Game';
+                }
+            
+                launchBtn.disabled = false;
+            }
+
+            async configureGamePaths() {
+                if (!window.electronAPI || !window.electronAPI.configureGamePaths) {
+                    this.updateStatus('Game configuration not available in web version');
+                    return;
+                }
+            
+                this.updateStatus('Configuring game paths...');
+
+                try {
+                    const success = await window.electronAPI.configureGamePaths();
+
+                    if (success) {
+                        this.updateStatus('Game paths configured successfully');
+                        document.getElementById('configure-game-btn').style.display = 'none';
+                    } else {
+                        this.updateStatus('Game path configuration cancelled');
+                    }
+                } catch (error) {
+                    console.error('Error configuring game paths:', error);
+                    this.updateStatus('Failed to configure game paths');
+                }
             }
 
             async connectToDatabase() {

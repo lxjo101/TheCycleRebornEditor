@@ -9,6 +9,13 @@ contextBridge.exposeInMainWorld('electronAPI', {
   
   showOpenDialog: (options) => ipcRenderer.invoke('show-open-dialog', options),
   
+  // Game launcher methods
+  launchGame: () => ipcRenderer.invoke('launch-game'),
+  
+  configureGamePaths: () => ipcRenderer.invoke('configure-game-paths'),
+  
+  checkGameConfigured: () => ipcRenderer.invoke('check-game-configured'),
+  
   // Platform information
   platform: process.platform,
   
