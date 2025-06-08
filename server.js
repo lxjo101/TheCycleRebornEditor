@@ -12,7 +12,7 @@ const PORT = process.env.PORT || 3000;
 const MONGO_URL = process.env.MONGO_URL || 'mongodb://localhost:27017';
 const DB_NAME = process.env.DB_NAME || 'ProspectDb';
 const COLLECTION_NAME = process.env.COLLECTION_NAME || 'PlayFabUserData';
-const INVENTORY_KEY = process.env.INVENTORY_KEY || 'Inventory'; // The key we're looking for in the Data object
+const INVENTORY_KEY = process.env.INVENTORY_KEY || 'Inventory'; 
 
 let db = null;
 let client = null;
