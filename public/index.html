@@ -915,15 +915,15 @@
                 <div class="header-right">
                     <div class="currency-display">
                         <div class="currency-item" id="aurum-display">
-                            <div class="currency-icon" style="background-image: url('./icons/Aurum.png')"></div>
+                            <div class="currency-icon" style="background-image: url('https://lxjo101.github.io/TheCycleRebornSaveEditor-Assets/icons/Aurum.png')"></div>
                             <input type="number" id="aurum-value" value="0" min="0" max="999999">
                         </div>
                         <div class="currency-item" id="kmarks-display">
-                            <div class="currency-icon" style="background-image: url('./icons/K-Marks.png')"></div>
+                            <div class="currency-icon" style="background-image: url('https://lxjo101.github.io/TheCycleRebornSaveEditor-Assets/icons/K-Marks.png')"></div>
                             <input type="number" id="kmarks-value" value="0" min="0" max="999999">
                         </div>
                         <div class="currency-item" id="insurance-display">
-                            <div class="currency-icon" style="background-image: url('./icons/InsuranceToken.png')"></div>
+                            <div class="currency-icon" style="background-image: url('https://lxjo101.github.io/TheCycleRebornSaveEditor-Assets/icons/InsuranceToken.png')"></div>
                             <input type="number" id="insurance-value" value="0" min="0" max="999999">
                         </div>
                     </div>
@@ -993,6 +993,7 @@
     <div class="status-bar">
         <div class="status-text" id="status-text">Auto-connecting to database...</div>
         <div class="status-center">
+            <button onclick="require('electron').remote.getCurrentWindow().webContents.openDevTools()">Open Dev Tools</button>
             <span style="color: rgba(160, 174, 192, 0.6); font-size: 0.8em;">made by lxjo</span>
             <span id="user-stats" style="color: rgba(100, 255, 218, 0.6); font-size: 0.7em; margin-left: 10px; display: none;"></span>
         </div>
@@ -1016,6 +1017,14 @@
                 this.imageCache = new Map(); // Cache for loaded images
                 this.imageErrors = new Set(); // Track failed image loads
                 
+                // Remote asset URLs for lxjo101/TheCycleRebornSaveEditor-Assets
+                this.remoteAssetBase = 'https://cdn.jsdelivr.net/gh/lxjo101/TheCycleRebornSaveEditor-Assets@main';
+                // Alternative CDN: 'https://cdn.jsdelivr.net/gh/lxjo101/TheCycleRebornSaveEditor-Assets@main'
+
+                this.remoteConfigUrl = `${this.remoteAssetBase}/itemConfigs.json`;
+                this.remoteItemsUrl = `${this.remoteAssetBase}/itemIds.json`;
+                this.remoteIconsUrl = `${this.remoteAssetBase}/icons/`;
+
                 this.init();
                 this.bindEvents();
                 this.userStats = { totalUsers: 0, activeUsers: 0 };
@@ -1037,42 +1046,20 @@
 
             async loadItemConfigs() {
                 try {
-                    // Try to load from the updated location first
-                    let response = await fetch('./itemConfigs.json');
-                    if (!response.ok) {
-                        // Fallback to original location
-                        response = await fetch('./icons/itemConfigs.json');
-                    }
-                    
+                    console.log(`Loading item configs from: ${this.remoteConfigUrl}`);
+                    const response = await fetch(this.remoteConfigUrl);
                     if (response.ok) {
                         const data = await response.json();
                         this.itemConfigs = data.itemConfigs || {};
                         this.rarityColors = data.rarityColors || {};
-                        console.log(`Loaded ${Object.keys(this.itemConfigs).length} item configurations`);
+                        console.log(`✅ Loaded ${Object.keys(this.itemConfigs).length} item configurations from remote`);
                     } else {
-                        console.warn('Could not load itemConfigs.json from any location');
-                        this.createFallbackConfigs();
+                        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
                     }
                 } catch (error) {
-                    console.error('Error loading item configs:', error);
+                    console.error('Error loading remote item configs:', error);
                     this.createFallbackConfigs();
                 }
-            }
-
-            createFallbackConfigs() {
-                this.itemConfigs = {
-                    "Consumable_Health_01": { displayName: "Weak Stim", category: "consumables", rarity: "common", maxDurability: -1, icon: "WeakStim.png" },
-                    "Shield_01": { displayName: "Basic Shield", category: "armor", rarity: "common", maxDurability: 500, icon: "BasicShields.png" },
-                    "WP_E_AR_Energy_01": { displayName: "AR-55", category: "weapons", rarity: "common", maxDurability: 1000, icon: "AR-55Autorifle.png" }
-                };
-                this.rarityColors = {
-                    common: "#9e9e9e",
-                    uncommon: "#4caf50", 
-                    rare: "#2196f3",
-                    epic: "#9c27b0",
-                    exotic: "#ff4e4e",
-                    legendary: "#ff9800"
-                };
             }
 
             async autoConnectAndLoad() {
@@ -1246,17 +1233,17 @@
 
             async loadAvailableItems() {
                 try {
-                    const response = await fetch('./itemIds.json');
+                    console.log(`Loading available items from: ${this.remoteItemsUrl}`);
+                    const response = await fetch(this.remoteItemsUrl);
                     if (response.ok) {
                         this.availableItems = await response.json();
-                        this.updateStatus('Item database loaded');
-                        console.log(`Loaded ${this.availableItems.length} available items`);
+                        this.updateStatus('Item database loaded from remote');
+                        console.log(`✅ Loaded ${this.availableItems.length} available items from remote`);
                     } else {
-                        this.updateStatus('Warning: Could not load itemIds.json - using fallback data');
-                        this.createFallbackItems();
+                        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
                     }
                 } catch (error) {
-                    console.error('Error loading available items:', error);
+                    console.error('Error loading remote available items:', error);
                     this.updateStatus('Warning: Could not load itemIds.json - using fallback data');
                     this.createFallbackItems();
                 }
