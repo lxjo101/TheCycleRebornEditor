@@ -993,9 +993,7 @@
     <div class="status-bar">
         <div class="status-text" id="status-text">Auto-connecting to database...</div>
         <div class="status-center">
-            <button onclick="require('electron').remote.getCurrentWindow().webContents.openDevTools()">Open Dev Tools</button>
             <span style="color: rgba(160, 174, 192, 0.6); font-size: 0.8em;">made by lxjo</span>
-            <span id="user-stats" style="color: rgba(100, 255, 218, 0.6); font-size: 0.7em; margin-left: 10px; display: none;"></span>
         </div>
         <div class="connection-status">
             <div class="status-indicator" id="connection-indicator"></div>
@@ -1018,8 +1016,7 @@
                 this.imageErrors = new Set(); // Track failed image loads
                 
                 // Remote asset URLs for lxjo101/TheCycleRebornSaveEditor-Assets
-                this.remoteAssetBase = 'https://cdn.jsdelivr.net/gh/lxjo101/TheCycleRebornSaveEditor-Assets@main';
-                // Alternative CDN: 'https://cdn.jsdelivr.net/gh/lxjo101/TheCycleRebornSaveEditor-Assets@main'
+                this.remoteAssetBase = 'https://raw.githubusercontent.com/lxjo101/TheCycleRebornSaveEditor-Assets/main';                // Alternative CDN: 'https://cdn.jsdelivr.net/gh/lxjo101/TheCycleRebornSaveEditor-Assets@main'
 
                 this.remoteConfigUrl = `${this.remoteAssetBase}/itemConfigs.json`;
                 this.remoteItemsUrl = `${this.remoteAssetBase}/itemIds.json`;
