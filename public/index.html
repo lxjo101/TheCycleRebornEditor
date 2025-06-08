@@ -119,8 +119,8 @@
         }
 
         .header {
-            display: flex;
-            justify-content: space-between;
+            display: flex; /* Change from grid to flex */
+            justify-content: space-between; /* Space between left and right */
             align-items: center;
             margin-bottom: 30px;
             padding: 20px 30px;
@@ -133,17 +133,93 @@
             backdrop-filter: blur(10px);
         }
 
+        .header-left {
+            display: flex;
+            justify-content: flex-start;
+        }
+
+        .header-right {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .header-right {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 10px;
+        }
+
         .header h1 {
             color: #64ffda;
             font-size: 2em;
             text-shadow: 0 0 10px rgba(100, 255, 218, 0.3);
         }
 
-        .header-buttons {
+        .currency-display {
             display: flex;
             gap: 10px;
             align-items: center;
-            flex-wrap: wrap;
+            margin-right: 5px;
+            margin-left: auto;
+        }
+
+        .currency-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 4px 8px;
+            border-radius: 15px;
+            border: 1px solid rgba(100, 255, 218, 0.3);
+        }
+
+        .currency-icon {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            background-color: rgba(45, 55, 75, 0.8);
+        }
+
+        .currency-item input {
+            background: none;
+            border: none;
+            color: #e0e0e0;
+            font-size: 14px;
+            text-align: right;
+            /* Remove spinner arrows */
+            -webkit-appearance: textfield;
+            -moz-appearance: textfield;
+            appearance: textfield;
+        }
+
+        .currency-item input::-webkit-outer-spin-button,
+        .currency-item input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        .currency-item input:focus {
+            outline: none;
+            color: #64ffda;
+        }
+
+        /* Dynamic width based on value length */
+        #aurum-value {
+            width: 45px; /* Smaller for aurum (usually lower numbers) */
+        }
+
+        #kmarks-value {
+            width: 65px; /* Larger for K-marks (can be 6 digits) */
+        }
+
+        #insurance-value {
+            width: 35px; /* Medium for insurance credits */
         }
 
         .header-buttons .btn {
@@ -154,7 +230,9 @@
             gap: 4px;
             white-space: nowrap;
             min-width: auto;
+            flex-shrink: 0; /* Prevent shrinking */
         }
+
 
         .header-buttons .btn svg {
             width: 14px;
@@ -551,6 +629,12 @@
             z-index: 900;
         }
 
+        .status-center {
+            color: rgba(160, 174, 192, 0.6);
+            font-size: 0.8em;
+            text-align: center;
+        }
+
         .status-text {
             color: #a0aec0;
         }
@@ -731,7 +815,7 @@
             align-items: center;
             justify-content: center;
             text-decoration: none;
-            flex-shrink: 0;
+            flex-shrink: 0; /* Prevent shrinking */
         }
 
         .github-link:hover {
@@ -756,6 +840,7 @@
             align-items: center;
             justify-content: center;
             cursor: pointer;
+            flex-shrink: 0; /* Prevent shrinking */
         }
 
         .reload-btn:hover {
@@ -768,6 +853,19 @@
             width: 20px;
             height: 20px;
         }
+
+        .footer-credit {
+            position: fixed;
+            bottom: 50px; /* Just above the status bar */
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgba(160, 174, 192, 0.6);
+            font-size: 0.7em;
+            z-index: 800;
+            pointer-events: none; /* Won't interfere with clicks */
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+        }
+
     </style>
 </head>
 <body>
@@ -798,8 +896,24 @@
 
         <div class="main-content" id="main-content">
             <div class="header">
-                <h1>The Cycle: Reborn - Save Editor</h1>
-                <div class="header-buttons">
+                <div class="header-left">
+                    <h1>The Cycle: Reborn - Save Editor</h1>
+                </div>
+                <div class="header-right">
+                    <div class="currency-display">
+                        <div class="currency-item" id="aurum-display">
+                            <div class="currency-icon" style="background-image: url('./icons/Aurum.png')"></div>
+                            <input type="number" id="aurum-value" value="0" min="0" max="999999">
+                        </div>
+                        <div class="currency-item" id="kmarks-display">
+                            <div class="currency-icon" style="background-image: url('./icons/K-Marks.png')"></div>
+                            <input type="number" id="kmarks-value" value="0" min="0" max="999999">
+                        </div>
+                        <div class="currency-item" id="insurance-display">
+                            <div class="currency-icon" style="background-image: url('./icons/InsuranceToken.png')"></div>
+                            <input type="number" id="insurance-value" value="0" min="0" max="999999">
+                        </div>
+                    </div>
                     <div class="auto-save-indicator" id="auto-save-indicator">Auto-saved!</div>
                     <button class="reload-btn" id="reload-all" title="Reload Inventory & Configs">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
@@ -813,6 +927,7 @@
                     </a>
                 </div>
             </div>
+
 
             <div class="search-container">
                 <input type="text" class="search-input" id="search-items" placeholder="Search items by name or ID...">
@@ -864,6 +979,7 @@
 
     <div class="status-bar">
         <div class="status-text" id="status-text">Auto-connecting to database...</div>
+        <div class="status-center">made by lxjo</div>
         <div class="connection-status">
             <div class="status-indicator" id="connection-indicator"></div>
             <span id="connection-text">Connecting...</span>
@@ -957,31 +1073,40 @@
                         this.filterAvailableItems();
                     });
                 });
-
+            
                 // Action buttons
                 document.getElementById('add-item-btn').addEventListener('click', () => this.toggleAvailableItems());
                 document.getElementById('clear-inventory').addEventListener('click', () => this.clearInventory());
                 document.getElementById('backup-save').addEventListener('click', () => this.exportBackup());
                 document.getElementById('restore-save').addEventListener('click', () => this.importBackup());
-
+            
                 // Search
                 document.getElementById('search-items').addEventListener('input', (e) => {
                     this.currentFilter = e.target.value.toLowerCase();
                     this.renderInventory();
                     this.filterAvailableItems();
                 });
-
+            
                 // Modal
                 document.querySelector('.close').addEventListener('click', () => this.closeModal());
-                
+
                 window.addEventListener('click', (e) => {
                     if (e.target.classList.contains('modal')) {
                         this.closeModal();
                     }
                 });
-                
-                document.getElementById('reload-all').addEventListener('click', () => this.reloadAll());
 
+                document.getElementById('reload-all').addEventListener('click', () => this.reloadAll());
+            
+                // Currency input listeners - ADD THIS HERE
+                ['aurum-value', 'kmarks-value', 'insurance-value'].forEach(id => {
+                    const element = document.getElementById(id);
+                    if (element) {
+                        element.addEventListener('change', () => {
+                            this.saveBalance();
+                        });
+                    }
+                });
             }
 
             async connectToDatabase() {
@@ -1054,6 +1179,9 @@
                         this.renderInventory();
                         this.updateStatus(`Inventory loaded - ${this.inventory.length} items found`);
                         console.log('Loaded inventory:', this.inventory);
+
+                        this.loadBalance().catch(err => console.warn('Balance loading failed:', err));
+
                     } else {
                         const errorData = await response.json().catch(() => ({ message: 'Unknown error' }));
                         throw new Error(errorData.message || 'Failed to load inventory');
@@ -1091,6 +1219,48 @@
                 }
             }
 
+            // Add this function after the loadInventory() function:
+            async loadBalance() {
+                try {
+                    const response = await fetch(`${this.apiBaseUrl}/balance`);
+                    if (response.ok) {
+                        const balance = await response.json();
+                        const aurumInput = document.getElementById('aurum-value');
+                        const kmarksInput = document.getElementById('kmarks-value');
+                        const insuranceInput = document.getElementById('insurance-value');
+
+                        if (aurumInput) aurumInput.value = balance.AU || 0;
+                        if (kmarksInput) kmarksInput.value = balance.SC || 0;
+                        if (insuranceInput) insuranceInput.value = balance.IN || 0;
+                    }
+                } catch (error) {
+                    console.error('Error loading balance:', error);
+                }
+            }
+
+            // Add this function after loadBalance():
+            async saveBalance() {
+                try {
+                    const balance = {
+                        AU: parseInt(document.getElementById('aurum-value').value) || 0,
+                        SC: parseInt(document.getElementById('kmarks-value').value) || 0,
+                        IN: parseInt(document.getElementById('insurance-value').value) || 0
+                    };
+
+                    const response = await fetch(`${this.apiBaseUrl}/balance`, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(balance)
+                    });
+
+                    if (response.ok) {
+                        console.log('Balance saved successfully');
+                    }
+                } catch (error) {
+                    console.error('Error saving balance:', error);
+                }
+            }
+            
             async reloadAll() {
                 this.updateStatus('Reloading all data...');
                 try {
@@ -1658,5 +1828,6 @@
         // Initialize the editor
         const editor = new CycleRebornEditor();
     </script>
+
 </body>
 </html>

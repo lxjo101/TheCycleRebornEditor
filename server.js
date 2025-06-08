@@ -689,6 +689,74 @@ app.get('/api/list-users', async (req, res) => {
     }
 });
 
+// Get balance
+app.get('/api/balance', async (req, res) => {
+    try {
+        if (!db) {
+            return res.status(400).json({ success: false, message: 'Not connected to database' });
+        }
+
+        const userDocument = await findUserWithInventory();
+        if (!userDocument) {
+            return res.status(404).json({ success: false, message: 'No user document found' });
+        }
+
+        // Look for Balance key
+        let balance = { AU: 0, SC: 0, IN: 0 };
+        
+        if (userDocument.Key === 'Balance' && userDocument.Value) {
+            balance = typeof userDocument.Value === 'string' ? JSON.parse(userDocument.Value) : userDocument.Value;
+        } else {
+            // Look for balance in other locations
+            const collection = db.collection(COLLECTION_NAME);
+            const balanceDoc = await collection.findOne({ Key: 'Balance' });
+            if (balanceDoc && balanceDoc.Value) {
+                balance = typeof balanceDoc.Value === 'string' ? JSON.parse(balanceDoc.Value) : balanceDoc.Value;
+            }
+        }
+
+        res.json(balance);
+    } catch (error) {
+        console.error('Error loading balance:', error);
+        res.status(500).json({ success: false, message: 'Failed to load balance', error: error.message });
+    }
+});
+
+// Save balance
+app.put('/api/balance', async (req, res) => {
+    try {
+        if (!db) {
+            return res.status(400).json({ success: false, message: 'Not connected to database' });
+        }
+
+        const newBalance = req.body;
+        const collection = db.collection(COLLECTION_NAME);
+        
+        // Try to find existing balance document
+        let balanceDoc = await collection.findOne({ Key: 'Balance' });
+        
+        if (balanceDoc) {
+            // Update existing
+            await collection.updateOne(
+                { _id: balanceDoc._id },
+                { $set: { Value: JSON.stringify(newBalance), LastUpdated: new Date().toISOString() } }
+            );
+        } else {
+            // Create new balance document
+            await collection.insertOne({
+                Key: 'Balance',
+                Value: JSON.stringify(newBalance),
+                LastUpdated: new Date().toISOString()
+            });
+        }
+
+        res.json({ success: true, message: 'Balance saved successfully' });
+    } catch (error) {
+        console.error('Error saving balance:', error);
+        res.status(500).json({ success: false, message: 'Failed to save balance', error: error.message });
+    }
+});
+
 // Health check endpoint
 app.get('/api/health', (req, res) => {
     res.json({ 

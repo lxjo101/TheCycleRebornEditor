@@ -30,34 +30,39 @@
     "nodemon": "^3.0.1"
   },
   "build": {
-    "appId": "com.cyclefrontier.saveeditor",
-    "productName": "The Cycle: Reborn Save Editor",
-    "directories": {
-      "output": "dist"
-    },
-    "files": [
-      "main.js",
-      "server.js",
-      "preload.js",
-      "public/**/*",
-      "index.html",
-      "itemIds.json",
-      "node_modules/**/*",
-      "!node_modules/.cache",
-      "!node_modules/electron-builder",
-      "!node_modules/nodemon",
-      "!node_modules/concurrently",
-      "!node_modules/wait-on"
-    ],
-    "win": {
-      "target": [
-        {
-          "target": "dir"
-        }
-      ],
-      "publisherName": "Cycle Frontier Save Editor"
-    }
+  "appId": "com.cyclefrontier.saveeditor",
+  "productName": "The Cycle Reborn Save Editor",
+  "directories": {
+    "output": "dist"
   },
+  "files": [
+    "main.js",
+    "server.js",
+    "preload.js",
+    "public/**/*",
+    "index.html",
+    "itemIds.json",
+    "itemConfigs.json",
+    "node_modules/**/*",
+    "!node_modules/.cache",
+    "!node_modules/electron-builder",
+    "!node_modules/nodemon",
+    "!node_modules/concurrently",
+    "!node_modules/wait-on"
+  ],
+  "win": {
+    "target": [
+      {
+        "target": "portable",
+        "arch": ["x64"]
+      }
+    ],
+    "icon": "icon.ico"
+  },
+  "portable": {
+    "artifactName": "TheCycleReborn-SaveEditor.exe"
+  }
+},
   "keywords": [
     "cycle",
     "reborn",

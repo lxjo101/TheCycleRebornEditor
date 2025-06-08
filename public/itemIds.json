@@ -288,6 +288,8 @@
     "insuredAttachmentId": "",
     "origin": { "t": "", "p": "", "g": "" }
   },
+  { "baseItemId": "Consumable_GasGrenade_01"},
+  { "baseItemId": "Consumable_SmokeGrenade_01"},
   {
     "itemId": "s1t2u3v4-5678-90ab-cdef-1234567890st",
     "baseItemId": "ShockGrenade_01",
