@@ -1818,22 +1818,12 @@
 
             getItemIcon(baseItemId) {
                 const config = this.getItemConfig(baseItemId);
-                
-                // If we have a specific icon path from config, use it
+                        
                 if (config.icon && config.icon !== this.getDefaultIcon(baseItemId)) {
-                    // Try multiple possible paths for the icons
-                    const possiblePaths = [
-                        `./icons/${config.icon}`,
-                        `./public/icons/${config.icon}`,
-                        `./${config.icon}`,
-                        `./assets/${config.icon}`
-                    ];
-                    
-                    // For now, return the first path and let error handling deal with failures
-                    return possiblePaths[0];
+                    // Use remote icons URL
+                    return `${this.remoteIconsUrl}${config.icon}`;
                 }
                 
-                // Use fallback placeholder
                 return this.createPlaceholderIcon(baseItemId);
             }
 
