@@ -45,9 +45,9 @@
         }
 
         .sidebar {
-            width: 250px;
+            width: 220px;
             background: rgba(20, 25, 40, 0.9);
-            padding: 20px;
+            padding: 15px;
             padding-bottom: 120px;
             border-right: 2px solid #4a5568;
             backdrop-filter: blur(10px);
@@ -55,7 +55,7 @@
             top: 0;
             left: 0;
             height: 100vh;
-            overflow-y: hidden;
+            overflow-y: auto;
             z-index: 50;
         }
 
@@ -74,16 +74,17 @@
 
         .filter-section h3 {
             color: #a0aec0;
-            margin-bottom: 10px;
-            font-size: 0.9em;
+            margin-bottom: 8px;
+            font-size: 0.8em;
             text-transform: uppercase;
+            font-weight: 600;
         }
 
         .filter-btn, .category-btn {
             display: block;
             width: 100%;
-            padding: 12px 15px;
-            margin-bottom: 5px;
+            padding: 8px 12px;
+            margin-bottom: 3px;
             background: rgba(45, 55, 75, 0.8);
             border: 1px solid #4a5568;
             color: #e0e0e0;
@@ -91,7 +92,8 @@
             cursor: pointer;
             transition: all 0.3s ease;
             border-radius: 4px;
-            font-size: 0.9em;
+            font-size: 0.8em;
+            line-height: 1.2;
         }
 
         .filter-btn:hover, .category-btn:hover {
@@ -110,7 +112,7 @@
             flex: 1;
             padding: 20px;
             padding-bottom: 100px;
-            padding-left: 270px;
+            padding-left: 240px;
             overflow-y: auto;
         }
 
@@ -137,13 +139,6 @@
         .header-left {
             display: flex;
             justify-content: flex-start;
-        }
-
-        .header-right {
-            display: flex;
-            justify-content: flex-end;
-            align-items: center;
-            gap: 10px;
         }
 
         .header-right {
@@ -223,6 +218,12 @@
             width: 35px; /* Medium for insurance credits */
         }
 
+        .header-buttons {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
         .header-buttons .btn {
             padding: 6px 10px;
             font-size: 0.75em;
@@ -233,7 +234,6 @@
             min-width: auto;
             flex-shrink: 0; /* Prevent shrinking */
         }
-
 
         .header-buttons .btn svg {
             width: 14px;
@@ -281,6 +281,16 @@
         .btn-danger:hover {
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(255, 65, 108, 0.4);
+        }
+
+        .btn-update {
+            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+            color: white;
+        }
+
+        .btn-update:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(72, 187, 120, 0.4);
         }
 
         .search-container {
@@ -867,6 +877,86 @@
             text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
         }
 
+        /* Auto-updater specific styles */
+        .version-info {
+            position: fixed;
+            bottom: 50px;
+            right: 20px;
+            color: rgba(160, 174, 192, 0.6);
+            font-size: 0.7em;
+            z-index: 800;
+            pointer-events: none;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .update-available-indicator {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ff8e8e 100%);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.7em;
+            animation: pulse-update 2s infinite;
+            margin-left: 8px;
+        }
+
+        @keyframes pulse-update {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        /* Update notification styles */
+        .update-notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 10000;
+            animation: slideInFromRight 0.5s ease-out;
+        }
+
+        @keyframes slideInFromRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* Enhanced button styles for update */
+        .btn-group {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+        }
+
+        /* Electron app specific styles */
+        .electron-app {
+            user-select: none;
+        }
+
+        .electron-app input, .electron-app textarea {
+            user-select: text;
+        }
+
+        .packaged-app .dev-only {
+            display: none !important;
+        }
+
+        /* Loading state for update button */
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .btn:disabled:hover {
+            transform: none !important;
+            box-shadow: none !important;
+        }
+
     </style>
 </head>
 <body>
@@ -894,7 +984,6 @@
                 <button class="filter-btn" id="restore-save">Import Backup</button>
             </div>
 
-
             <div class="filter-section">
                 <h3>Game</h3>
                 <button class="filter-btn" id="launch-game-btn">
@@ -902,6 +991,16 @@
                 </button>
                 <button class="filter-btn" id="configure-game-btn" style="display: none;">
                     Configure Game Path
+                </button>
+            </div>
+
+            <div class="filter-section" id="update-section" style="display: none;">
+                <h3>Updates</h3>
+                <button class="filter-btn btn-update" id="check-updates-btn">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="margin-right: 6px;">
+                        <path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z"/>
+                    </svg>
+                    Check Updates
                 </button>
             </div>
        
@@ -928,19 +1027,20 @@
                         </div>
                     </div>
                     <div class="auto-save-indicator" id="auto-save-indicator">Auto-saved!</div>
-                    <button class="reload-btn" id="reload-all" title="Reload Inventory & Configs">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/>
-                        </svg>
-                    </button>
-                    <a href="https://github.com/lxjo101" target="_blank" class="github-link" title="Visit GitHub Profile">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
-                        </svg>
-                    </a>
+                    <div class="header-buttons">
+                        <button class="reload-btn" id="reload-all" title="Reload Inventory & Configs">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/>
+                            </svg>
+                        </button>
+                        <a href="https://github.com/lxjo101" target="_blank" class="github-link" title="Visit GitHub Profile">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                            </svg>
+                        </a>
+                    </div>
                 </div>
             </div>
-
 
             <div class="search-container">
                 <input type="text" class="search-input" id="search-items" placeholder="Search items by name or ID...">
@@ -1032,8 +1132,155 @@
                 this.updateStatus('Auto-connecting to database...');
                 await this.loadItemConfigs();
                 await this.loadAvailableItems();
+                
+                // Initialize update checker if in Electron
+                if (window.electronAPI) {
+                    this.initializeUpdateChecker();
+                }
+                
                 // Auto-connect and load
                 this.autoConnectAndLoad();
+            }
+
+            async initializeUpdateChecker() {
+                try {
+                    // Show the update section if in Electron
+                    const updateSection = document.getElementById('update-section');
+                    if (updateSection) {
+                        updateSection.style.display = 'block';
+                    }
+
+                    const updateBtn = document.getElementById('check-updates-btn');
+                    if (updateBtn) {
+                        updateBtn.addEventListener('click', () => this.checkForUpdates());
+                    }
+
+                    // Display current version
+                    if (window.electronAPI.getCurrentVersion) {
+                        const version = await window.electronAPI.getCurrentVersion();
+                        this.displayVersion(version);
+                    }
+
+                    // Listen for update events
+                    if (window.electronAPI.onUpdateAvailable) {
+                        window.electronAPI.onUpdateAvailable((data) => {
+                            this.showUpdateAvailable(data);
+                        });
+                    }
+
+                    if (window.electronAPI.onUpdateError) {
+                        window.electronAPI.onUpdateError((error) => {
+                            console.error('Update error:', error);
+                            this.updateStatus(`Update error: ${error.message || error}`);
+                        });
+                    }
+
+                    console.log('✅ Auto-updater initialized');
+                } catch (error) {
+                    console.log('Update checker not available:', error);
+                }
+            }
+
+            async checkForUpdates() {
+                const updateBtn = document.getElementById('check-updates-btn');
+                const originalHTML = updateBtn.innerHTML;
+                
+                try {
+                    // Show loading state
+                    updateBtn.innerHTML = `
+                        <div class="spinner" style="width: 16px; height: 16px; margin-right: 5px;"></div>
+                        Checking...
+                    `;
+                    updateBtn.disabled = true;
+
+                    if (window.electronAPI && window.electronAPI.checkForUpdates) {
+                        const result = await window.electronAPI.checkForUpdates();
+                        
+                        if (result.success) {
+                            this.updateStatus('Update check completed');
+                        } else {
+                            this.updateStatus(`Update check failed: ${result.message}`);
+                        }
+                    } else {
+                        this.updateStatus('Update checker not available');
+                    }
+                } catch (error) {
+                    console.error('Error checking for updates:', error);
+                    this.updateStatus('Error checking for updates');
+                } finally {
+                    // Restore button state
+                    updateBtn.innerHTML = originalHTML;
+                    updateBtn.disabled = false;
+                }
+            }
+
+            displayVersion(version) {
+                // Create version display element
+                const existingVersion = document.querySelector('.version-info');
+                if (existingVersion) {
+                    existingVersion.remove();
+                }
+
+                const versionDiv = document.createElement('div');
+                versionDiv.className = 'version-info';
+                versionDiv.textContent = `v${version}`;
+                document.body.appendChild(versionDiv);
+            }
+
+            showUpdateAvailable(data) {
+                // Add update indicator to the version info
+                const versionInfo = document.querySelector('.version-info');
+                if (versionInfo && !versionInfo.querySelector('.update-available-indicator')) {
+                    const indicator = document.createElement('span');
+                    indicator.className = 'update-available-indicator';
+                    indicator.textContent = 'Update Available!';
+                    indicator.style.cursor = 'pointer';
+                    indicator.addEventListener('click', () => this.checkForUpdates());
+                    versionInfo.appendChild(indicator);
+                }
+
+                // Show update notification
+                this.showUpdateNotification(data);
+            }
+
+            showUpdateNotification(data) {
+                // Remove any existing notifications
+                const existingNotification = document.querySelector('.update-notification');
+                if (existingNotification) {
+                    existingNotification.remove();
+                }
+
+                const notification = document.createElement('div');
+                notification.className = 'update-notification';
+                notification.innerHTML = `
+                    <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+                                color: white; padding: 15px; border-radius: 8px; margin: 10px; 
+                                max-width: 300px; box-shadow: 0 4px 20px rgba(0,0,0,0.3);">
+                        <h4 style="margin: 0 0 10px 0;">🎉 Update Available!</h4>
+                        <p style="margin: 0 0 10px 0; font-size: 14px;">Version ${data.version || 'latest'} is now available.</p>
+                        <div style="display: flex; gap: 10px;">
+                            <button onclick="this.parentElement.parentElement.parentElement.remove()" 
+                                    style="flex: 1; padding: 8px; border: none; border-radius: 4px; 
+                                           background: rgba(255,255,255,0.2); color: white; cursor: pointer;">
+                                Later
+                            </button>
+                            <button onclick="editor.checkForUpdates(); this.parentElement.parentElement.parentElement.remove();" 
+                                    style="flex: 1; padding: 8px; border: none; border-radius: 4px; 
+                                           background: rgba(255,255,255,0.9); color: #333; cursor: pointer; font-weight: bold;">
+                                Update Now
+                            </button>
+                        </div>
+                    </div>
+                `;
+                
+                document.body.appendChild(notification);
+                
+                // Auto-remove after 10 seconds
+                setTimeout(() => {
+                    if (notification.parentElement) {
+                        notification.remove();
+                    }
+                }, 10000);
             }
             
             async testStats() {
@@ -1109,7 +1356,7 @@
 
                 document.getElementById('reload-all').addEventListener('click', () => this.reloadAll());
             
-                // Currency input listeners - ADD THIS HERE
+                // Currency input listeners
                 ['aurum-value', 'kmarks-value', 'insurance-value'].forEach(id => {
                     const element = document.getElementById(id);
                     if (element) {
@@ -1286,6 +1533,7 @@
                     this.generateEmptyInventory();
                 }
             }
+            
             async saveInventory() {
                 if (!this.isConnected) {
                     return;
@@ -1945,10 +2193,45 @@
                     this.pingUserStats();
                 }, 5 * 60 * 1000);
             }
+
+            createFallbackConfigs() {
+                this.itemConfigs = {};
+                this.rarityColors = {
+                    common: '#9e9e9e',
+                    uncommon: '#4caf50',
+                    rare: '#2196f3',
+                    epic: '#9c27b0',
+                    exotic: '#ff4e4e',
+                    legendary: '#ff9800'
+                };
+            }
         }
 
         // Initialize the editor
         const editor = new CycleRebornEditor();
+
+        // Listen for update events from the main process (if in Electron)
+        window.addEventListener('update-available', (event) => {
+            const { version, releaseNotes } = event.detail;
+            
+            if (editor) {
+                editor.showUpdateAvailable({ version, releaseNotes });
+            }
+        });
+
+        // Console welcome message
+        console.log(`
+🎮 The Cycle: Reborn Save Editor
+🔧 Auto-Updater Enabled
+🚀 Version: ${window.electronAPI ? 'Electron App' : 'Web Version'}
+
+Commands:
+- Ctrl+U: Check for updates (Electron only)
+- F12: Developer tools
+- Ctrl+R: Reload page
+
+Repository: https://github.com/lxjo101/TheCycleRebornSaveEditor
+        `);
     </script>
 
 </body>

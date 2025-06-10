@@ -2,10 +2,12 @@ const { app, BrowserWindow, Menu, shell, dialog, ipcMain } = require('electron')
 const path = require('path');
 const { spawn } = require('child_process');
 const fs = require('fs');
+const AutoUpdater = require('./updater'); // Add auto-updater
 
 // Keep a global reference of the window object
 let mainWindow;
 let serverProcess;
+let autoUpdater; // Auto-updater instance
 const SERVER_PORT = 3000;
 const SERVER_URL = `http://localhost:${SERVER_PORT}`;
 
@@ -41,6 +43,12 @@ function createWindow() {
     titleBarStyle: 'default'
   });
 
+  // Initialize auto-updater
+  autoUpdater = new AutoUpdater({
+    githubOwner: 'lxjo101', // Replace with your GitHub username
+    githubRepo: 'TheCycleRebornSaveEditor' // Replace with your repo name
+  });
+
   // Create application menu
   createMenu();
 
@@ -60,6 +68,13 @@ function createWindow() {
           app.dock.show();
         }
         mainWindow.focus();
+
+        // Check for updates after window is shown (only in production)
+        if (app.isPackaged) {
+          setTimeout(() => {
+            autoUpdater.checkForUpdates();
+          }, 3000); // Wait 3 seconds after startup
+        }
       });
     })
     .catch((error) => {
@@ -247,8 +262,91 @@ function checkServerHealth() {
 }
 
 function createMenu() {
-  // Hide the menu bar completely
-  Menu.setApplicationMenu(null);
+  // Create a minimal menu with update check
+  const template = [
+    {
+      label: 'File',
+      submenu: [
+        {
+          label: 'Check for Updates...',
+          click: async () => {
+            if (autoUpdater) {
+              await autoUpdater.checkForUpdatesManually();
+            }
+          }
+        },
+        { type: 'separator' },
+        {
+          label: 'Exit',
+          accelerator: process.platform === 'darwin' ? 'Cmd+Q' : 'Ctrl+Q',
+          click: () => {
+            app.quit();
+          }
+        }
+      ]
+    },
+    {
+      label: 'Help',
+      submenu: [
+        {
+          label: 'About',
+          click: () => showAboutDialog()
+        },
+        {
+          label: 'GitHub Repository',
+          click: () => {
+            shell.openExternal('https://github.com/lxjo101/TheCycleRebornSaveEditor');
+          }
+        }
+      ]
+    }
+  ];
+
+  // For macOS, adjust the menu structure
+  if (process.platform === 'darwin') {
+    template.unshift({
+      label: app.getName(),
+      submenu: [
+        {
+          label: 'About ' + app.getName(),
+          click: () => showAboutDialog()
+        },
+        { type: 'separator' },
+        {
+          label: 'Check for Updates...',
+          click: async () => {
+            if (autoUpdater) {
+              await autoUpdater.checkForUpdatesManually();
+            }
+          }
+        },
+        { type: 'separator' },
+        {
+          label: 'Hide ' + app.getName(),
+          accelerator: 'Command+H',
+          role: 'hide'
+        },
+        {
+          label: 'Hide Others',
+          accelerator: 'Command+Shift+H',
+          role: 'hideothers'
+        },
+        {
+          label: 'Show All',
+          role: 'unhide'
+        },
+        { type: 'separator' },
+        {
+          label: 'Quit',
+          accelerator: 'Command+Q',
+          click: () => app.quit()
+        }
+      ]
+    });
+  }
+
+  const menu = Menu.buildFromTemplate(template);
+  Menu.setApplicationMenu(menu);
 }
 
 function showAboutDialog() {
@@ -256,7 +354,7 @@ function showAboutDialog() {
     type: 'info',
     title: 'About The Cycle: Reborn Save Editor',
     message: 'The Cycle: Reborn Save Editor',
-    detail: `Version: ${app.getVersion()}\n\nA desktop application for editing The Cycle: Reborn save files through MongoDB.\n\nCreated by the community for the community.`,
+    detail: `Version: ${app.getVersion()}\n\nA desktop application for editing The Cycle: Reborn save files through MongoDB.\n\nCreated by the community for the community.\n\nFeatures automatic updates from GitHub releases.`,
     buttons: ['OK']
   });
 }
@@ -297,7 +395,7 @@ app.on('before-quit', () => {
 // Handle protocol for deep linking (optional)
 app.setAsDefaultProtocolClient('cycle-frontier-editor');
 
-// IPC handlers (if needed for future features)
+// IPC handlers
 ipcMain.handle('get-app-version', () => {
   return app.getVersion();
 });
@@ -310,6 +408,25 @@ ipcMain.handle('show-save-dialog', async (event, options) => {
 ipcMain.handle('show-open-dialog', async (event, options) => {
   const result = await dialog.showOpenDialog(mainWindow, options);
   return result;
+});
+
+// Auto-updater IPC handlers
+ipcMain.handle('check-for-updates', async () => {
+  try {
+    if (autoUpdater) {
+      await autoUpdater.checkForUpdatesManually();
+      return { success: true };
+    } else {
+      return { success: false, message: 'Auto-updater not initialized' };
+    }
+  } catch (error) {
+    console.error('Error checking for updates:', error);
+    return { success: false, message: error.message };
+  }
+});
+
+ipcMain.handle('get-current-version', () => {
+  return app.getVersion();
 });
 
 // Game launcher configuration storage

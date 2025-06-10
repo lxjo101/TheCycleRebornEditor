@@ -1,7 +1,7 @@
 {
   "name": "cycle-frontier-save-editor",
-  "version": "1.0.1",
-  "description": "Desktop Save Editor for The Cycle: Reborn - Edit your inventory through MongoDB",
+  "version": "1.0.2",
+  "description": "Desktop Save Editor for The Cycle: Reborn - Edit your inventory through MongoDB with automatic updates",
   "main": "main.js",
   "scripts": {
     "start": "electron .",
@@ -15,7 +15,9 @@
     "dist": "npm run build",
     "setup": "npm install && echo 'Setup complete! Run npm start to launch the desktop app'",
     "test": "node -e \"console.log('Testing MongoDB connection...'); require('./server.js');\"",
-    "clean": "rmdir /s /q dist 2>nul & rmdir /s /q node_modules\\.cache 2>nul & echo Cache cleared"
+    "clean": "rmdir /s /q dist 2>nul & rmdir /s /q node_modules\\.cache 2>nul & echo Cache cleared",
+    "release": "npm run build && echo 'Build complete! Upload the executable to GitHub releases.'",
+    "postversion": "git push && git push --tags"
   },
   "dependencies": {
     "cors": "^2.8.5",
@@ -30,55 +32,159 @@
     "nodemon": "^3.0.1"
   },
   "build": {
-  "appId": "com.cyclefrontier.saveeditor",
-  "productName": "The Cycle Reborn Save Editor",
-  "directories": {
-    "output": "dist"
-  },
-  "files": [
-    "main.js",
-    "server.js",
-    "preload.js",
-    "public/**/*",
-    "index.html",
-    "itemIds.json",
-    "itemConfigs.json",
-    "node_modules/**/*",
-    "!node_modules/.cache",
-    "!node_modules/electron-builder",
-    "!node_modules/nodemon",
-    "!node_modules/concurrently",
-    "!node_modules/wait-on"
-  ],
-  "win": {
-    "target": [
+    "appId": "com.cyclefrontier.saveeditor",
+    "productName": "The Cycle Reborn Save Editor",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "main.js",
+      "server.js",
+      "preload.js",
+      "updater.js",
+      "public/**/*",
+      "index.html",
+      "itemIds.json",
+      "itemConfigs.json",
+      "gameConfig.json",
+      "node_modules/**/*",
+      "!node_modules/.cache",
+      "!node_modules/electron-builder",
+      "!node_modules/nodemon",
+      "!node_modules/concurrently",
+      "!node_modules/wait-on",
+      "!node_modules/electron-reload"
+    ],
+    "extraResources": [
       {
-        "target": "portable",
-        "arch": ["x64"]
+        "from": "assets/",
+        "to": "assets/",
+        "filter": ["**/*"]
       }
     ],
-    "icon": "icon.ico"
+    "win": {
+      "target": [
+        {
+          "target": "portable",
+          "arch": ["x64"]
+        },
+        {
+          "target": "nsis",
+          "arch": ["x64"]
+        }
+      ],
+      "icon": "icon.ico",
+      "publisherName": "lxjo",
+      "verifyUpdateCodeSignature": false,
+      "requestedExecutionLevel": "asInvoker",
+      "artifactName": "${productName}-v${version}-${os}-${arch}.${ext}"
+    },
+    "portable": {
+      "artifactName": "TheCycleReborn-SaveEditor-v${version}.exe"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "artifactName": "TheCycleReborn-SaveEditor-Setup-v${version}.exe",
+      "shortcutName": "The Cycle Reborn Save Editor",
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "installerIcon": "icon.ico",
+      "uninstallerIcon": "icon.ico",
+      "installerHeaderIcon": "icon.ico"
+    },
+    "mac": {
+      "target": [
+        {
+          "target": "dmg",
+          "arch": ["x64", "arm64"]
+        },
+        {
+          "target": "zip",
+          "arch": ["x64", "arm64"]
+        }
+      ],
+      "icon": "icon.icns",
+      "category": "public.app-category.games",
+      "artifactName": "${productName}-v${version}-${os}-${arch}.${ext}",
+      "hardenedRuntime": true,
+      "gatekeeperAssess": false,
+      "entitlements": "build/entitlements.mac.plist",
+      "entitlementsInherit": "build/entitlements.mac.plist"
+    },
+    "dmg": {
+      "title": "${productName} ${version}",
+      "artifactName": "TheCycleReborn-SaveEditor-v${version}-mac.dmg"
+    },
+    "linux": {
+      "target": [
+        {
+          "target": "AppImage",
+          "arch": ["x64"]
+        },
+        {
+          "target": "deb",
+          "arch": ["x64"]
+        },
+        {
+          "target": "tar.gz",
+          "arch": ["x64"]
+        }
+      ],
+      "icon": "icon.png",
+      "category": "Game",
+      "artifactName": "${productName}-v${version}-${os}-${arch}.${ext}",
+      "desktop": {
+        "Name": "The Cycle Reborn Save Editor",
+        "Comment": "Edit your The Cycle: Reborn save files",
+        "Categories": "Game;Utility;",
+        "Keywords": "cycle;reborn;save;editor;mongodb;"
+      }
+    },
+    "appImage": {
+      "artifactName": "TheCycleReborn-SaveEditor-v${version}-linux.AppImage"
+    },
+    "deb": {
+      "artifactName": "TheCycleReborn-SaveEditor-v${version}-linux.deb"
+    },
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "lxjo101",
+        "repo": "TheCycleRebornSaveEditor",
+        "releaseType": "release"
+      }
+    ],
+    "compression": "normal",
+    "nativeRebuilder": "sequential"
   },
-  "portable": {
-    "artifactName": "TheCycleReborn-SaveEditor.exe"
-  }
-},
   "keywords": [
     "cycle",
     "reborn",
+    "frontier",
     "save",
     "editor",
     "mongodb",
     "game",
     "inventory",
     "electron",
-    "desktop"
+    "desktop",
+    "auto-update",
+    "github"
   ],
-  "author": "lxjo",
+  "author": {
+    "name": "lxjo",
+    "url": "https://github.com/lxjo101"
+  },
   "license": "MIT",
   "repository": {
-    "type": "git"
+    "type": "git",
+    "url": "https://github.com/lxjo101/TheCycleRebornSaveEditor.git"
   },
+  "bugs": {
+    "url": "https://github.com/lxjo101/TheCycleRebornSaveEditor/issues"
+  },
+  "homepage": "https://github.com/lxjo101/TheCycleRebornSaveEditor#readme",
   "engines": {
     "node": ">=16.0.0",
     "npm": ">=7.0.0"
@@ -88,5 +194,10 @@
     "database": "ProspectDb",
     "collection": "PlayFabUserData",
     "inventoryKey": "Inventory"
+  },
+  "electronUpdater": {
+    "provider": "github",
+    "owner": "lxjo101",
+    "repo": "TheCycleRebornSaveEditor"
   }
 }
