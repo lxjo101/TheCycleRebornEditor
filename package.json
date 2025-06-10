@@ -155,8 +155,7 @@
         "releaseType": "release"
       }
     ],
-    "compression": "normal",
-    "nativeRebuilder": "sequential"
+    "compression": "normal"
   },
   "keywords": [
     "cycle",
