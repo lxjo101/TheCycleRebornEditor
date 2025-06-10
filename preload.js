@@ -9,6 +9,12 @@ contextBridge.exposeInMainWorld('electronAPI', {
   
   showOpenDialog: (options) => ipcRenderer.invoke('show-open-dialog', options),
   
+  // Window control methods
+  windowMinimize: () => ipcRenderer.invoke('window-minimize'),
+  windowMaximize: () => ipcRenderer.invoke('window-maximize'),
+  windowClose: () => ipcRenderer.invoke('window-close'),
+  windowIsMaximized: () => ipcRenderer.invoke('window-is-maximized'),
+  
   // Game launcher methods
   launchGame: () => ipcRenderer.invoke('launch-game'),
   

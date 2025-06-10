@@ -18,6 +18,75 @@
             min-height: 100vh;
             overflow-x: hidden;
             overflow-y: auto;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Custom Title Bar */
+        .custom-title-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 30px;
+            background: rgba(20, 25, 40, 0.95);
+            border-bottom: 1px solid #4a5568;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            -webkit-app-region: drag;
+            backdrop-filter: blur(10px);
+        }
+
+        .title-bar-title {
+            color: #64ffda;
+            font-size: 0.85em;
+            font-weight: 600;
+            margin-left: 15px;
+            text-shadow: 0 0 5px rgba(100, 255, 218, 0.3);
+        }
+
+        .title-bar-controls {
+            display: flex;
+            -webkit-app-region: no-drag;
+        }
+
+        .title-bar-button {
+            width: 46px;
+            height: 30px;
+            border: none;
+            background: transparent;
+            color: #e0e0e0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+            font-size: 14px;
+        }
+
+        .title-bar-button:hover {
+            background: rgba(100, 255, 218, 0.1);
+            color: #64ffda;
+        }
+
+        .title-bar-button.close:hover {
+            background: #ff6b6b;
+            color: white;
+        }
+
+        .title-bar-button svg {
+            width: 12px;
+            height: 12px;
+        }
+
+        /* Adjust container for title bar */
+        .container {
+            display: flex;
+            min-height: 100vh;
+            padding-top: 30px; /* Space for title bar */
+            padding-bottom: 80px; /* Space for status bar */
         }
 
         /* Hide default scrollbar */
@@ -38,12 +107,6 @@
             background: #4fd1c7;
         }
 
-        .container {
-            display: flex;
-            min-height: 100vh;
-            padding-bottom: 80px; /* Space for status bar */
-        }
-
         .sidebar {
             width: 220px;
             background: rgba(20, 25, 40, 0.9);
@@ -52,24 +115,24 @@
             border-right: 2px solid #4a5568;
             backdrop-filter: blur(10px);
             position: fixed;
-            top: 0;
+            top: 30px; /* Adjusted for title bar */
             left: 0;
-            height: 100vh;
+            height: calc(100vh - 30px); /* Adjusted for title bar */
             overflow-y: auto;
             z-index: 50;
         }
 
         .sidebar h2 {
             color: #64ffda;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             text-align: center;
-            font-size: 1.2em;
+            font-size: 1.1em;
             border-bottom: 2px solid #4a5568;
-            padding-bottom: 10px;
+            padding-bottom: 8px;
         }
 
         .filter-section {
-            margin-bottom: 30px;
+            margin-bottom: 20px;
         }
 
         .filter-section h3 {
@@ -960,6 +1023,14 @@
     </style>
 </head>
 <body>
+    <!-- Custom Title Bar -->
+    <div class="custom-title-bar">
+        <div class="title-bar-title">The Cycle: Reborn - Save Editor</div>
+        <div class="title-bar-controls" id="title-bar-controls">
+            <!-- Window controls will be added by JavaScript if in Electron -->
+        </div>
+    </div>
+
     <div class="container">
         <div class="sidebar">
             <h2>FILTERS</h2>
@@ -1133,6 +1204,9 @@
                 await this.loadItemConfigs();
                 await this.loadAvailableItems();
                 
+                // Initialize window controls if in Electron
+                this.initializeWindowControls();
+                
                 // Initialize update checker if in Electron
                 if (window.electronAPI) {
                     this.initializeUpdateChecker();
@@ -1140,6 +1214,60 @@
                 
                 // Auto-connect and load
                 this.autoConnectAndLoad();
+            }
+
+            initializeWindowControls() {
+                if (window.electronAPI && window.electronAPI.windowMinimize) {
+                    // We're in Electron, add window controls
+                    const controlsContainer = document.getElementById('title-bar-controls');
+                    controlsContainer.innerHTML = `
+                        <button class="title-bar-button minimize" id="minimize-btn" title="Minimize">
+                            <svg viewBox="0 0 12 12" fill="currentColor">
+                                <rect width="10" height="1" x="1" y="6"/>
+                            </svg>
+                        </button>
+                        <button class="title-bar-button maximize" id="maximize-btn" title="Maximize">
+                            <svg viewBox="0 0 12 12" fill="currentColor">
+                                <rect width="9" height="9" x="1.5" y="1.5" fill="none" stroke="currentColor" stroke-width="1"/>
+                            </svg>
+                        </button>
+                        <button class="title-bar-button close" id="close-btn" title="Close">
+                            <svg viewBox="0 0 12 12" fill="currentColor">
+                                <path d="M6.279 5.5L11 1l.5.5L6.779 6l4.72 4.5-.5.5L6.28 6.5 1.5 11l-.5-.5L5.721 6 1 1.5l.5-.5L6.279 5.5z"/>
+                            </svg>
+                        </button>
+                    `;
+
+                    // Add event listeners
+                    document.getElementById('minimize-btn').addEventListener('click', () => {
+                        window.electronAPI.windowMinimize();
+                    });
+
+                    document.getElementById('maximize-btn').addEventListener('click', async () => {
+                        await window.electronAPI.windowMaximize();
+                        this.updateMaximizeButton();
+                    });
+
+                    document.getElementById('close-btn').addEventListener('click', () => {
+                        window.electronAPI.windowClose();
+                    });
+
+                    // Update maximize button icon based on window state
+                    this.updateMaximizeButton();
+                } else {
+                    // We're in web browser, hide the title bar or show a web version
+                    const titleBar = document.querySelector('.custom-title-bar');
+                    titleBar.style.display = 'none';
+                    
+                    // Adjust container padding
+                    const container = document.querySelector('.container');
+                    container.style.paddingTop = '0';
+                    
+                    // Adjust sidebar
+                    const sidebar = document.querySelector('.sidebar');
+                    sidebar.style.top = '0';
+                    sidebar.style.height = '100vh';
+                }
             }
 
             async initializeUpdateChecker() {
@@ -1283,6 +1411,30 @@
                 }, 10000);
             }
             
+            async updateMaximizeButton() {
+                if (window.electronAPI && window.electronAPI.windowIsMaximized) {
+                    const isMaximized = await window.electronAPI.windowIsMaximized();
+                    const maximizeBtn = document.getElementById('maximize-btn');
+                    
+                    if (isMaximized) {
+                        maximizeBtn.innerHTML = `
+                            <svg viewBox="0 0 12 12" fill="currentColor">
+                                <rect width="7" height="7" x="1.5" y="3.5" fill="none" stroke="currentColor" stroke-width="1"/>
+                                <rect width="7" height="7" x="3.5" y="1.5" fill="none" stroke="currentColor" stroke-width="1"/>
+                            </svg>
+                        `;
+                        maximizeBtn.title = 'Restore';
+                    } else {
+                        maximizeBtn.innerHTML = `
+                            <svg viewBox="0 0 12 12" fill="currentColor">
+                                <rect width="9" height="9" x="1.5" y="1.5" fill="none" stroke="currentColor" stroke-width="1"/>
+                            </svg>
+                        `;
+                        maximizeBtn.title = 'Maximize';
+                    }
+                }
+            }
+
             async testStats() {
                 console.log('Testing stats manually...');
                 await this.pingUserStats();
@@ -1321,6 +1473,8 @@
             }
 
             bindEvents() {
+                // Window controls are now handled in initializeWindowControls()
+                
                 // Category filters
                 document.querySelectorAll('.category-btn').forEach(btn => {
                     btn.addEventListener('click', (e) => {
@@ -2230,7 +2384,7 @@ Commands:
 - F12: Developer tools
 - Ctrl+R: Reload page
 
-Repository: https://github.com/lxjo101/TheCycleRebornSaveEditor
+Repository: https://github.com/lxjo101/TheCycleRebornEditor
         `);
     </script>
 

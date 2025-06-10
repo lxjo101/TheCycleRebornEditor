@@ -8,7 +8,7 @@ const { spawn } = require('child_process');
 class AutoUpdater {
     constructor(options = {}) {
         this.githubOwner = options.githubOwner || 'lxjo101';
-        this.githubRepo = options.githubRepo || 'TheCycleRebornSaveEditor';
+        this.githubRepo = options.githubRepo || 'TheCycleRebornEditor';
         this.currentVersion = app.getVersion();
         this.updateCheckUrl = `https://api.github.com/repos/${this.githubOwner}/${this.githubRepo}/releases/latest`;
         this.downloadDir = path.join(app.getPath('temp'), 'app-updates');

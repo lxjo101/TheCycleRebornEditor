@@ -151,7 +151,7 @@
       {
         "provider": "github",
         "owner": "lxjo101",
-        "repo": "TheCycleRebornSaveEditor",
+        "repo": "TheCycleRebornEditor",
         "releaseType": "release"
       }
     ],
@@ -178,12 +178,12 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/lxjo101/TheCycleRebornSaveEditor.git"
+    "url": "https://github.com/lxjo101/TheCycleRebornEditor.git"
   },
   "bugs": {
-    "url": "https://github.com/lxjo101/TheCycleRebornSaveEditor/issues"
+    "url": "https://github.com/lxjo101/TheCycleRebornEditor/issues"
   },
-  "homepage": "https://github.com/lxjo101/TheCycleRebornSaveEditor#readme",
+  "homepage": "https://github.com/lxjo101/TheCycleRebornEditor#readme",
   "engines": {
     "node": ">=16.0.0",
     "npm": ">=7.0.0"
@@ -197,6 +197,6 @@
   "electronUpdater": {
     "provider": "github",
     "owner": "lxjo101",
-    "repo": "TheCycleRebornSaveEditor"
+    "repo": "TheCycleRebornEditor"
   }
 }

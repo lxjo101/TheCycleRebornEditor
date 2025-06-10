@@ -40,13 +40,14 @@ function createWindow() {
     icon: getIconPath(),
     title: 'The Cycle: Reborn Save Editor',
     show: false, // Don't show until ready
-    titleBarStyle: 'default'
+    titleBarStyle: 'hidden', // Hide the default title bar
+    frame: false // Remove the window frame completely
   });
 
   // Initialize auto-updater
   autoUpdater = new AutoUpdater({
     githubOwner: 'lxjo101', // Replace with your GitHub username
-    githubRepo: 'TheCycleRebornSaveEditor' // Replace with your repo name
+    githubRepo: 'TheCycleRebornEditor' // Fixed repo name
   });
 
   // Create application menu
@@ -262,91 +263,8 @@ function checkServerHealth() {
 }
 
 function createMenu() {
-  // Create a minimal menu with update check
-  const template = [
-    {
-      label: 'File',
-      submenu: [
-        {
-          label: 'Check for Updates...',
-          click: async () => {
-            if (autoUpdater) {
-              await autoUpdater.checkForUpdatesManually();
-            }
-          }
-        },
-        { type: 'separator' },
-        {
-          label: 'Exit',
-          accelerator: process.platform === 'darwin' ? 'Cmd+Q' : 'Ctrl+Q',
-          click: () => {
-            app.quit();
-          }
-        }
-      ]
-    },
-    {
-      label: 'Help',
-      submenu: [
-        {
-          label: 'About',
-          click: () => showAboutDialog()
-        },
-        {
-          label: 'GitHub Repository',
-          click: () => {
-            shell.openExternal('https://github.com/lxjo101/TheCycleRebornSaveEditor');
-          }
-        }
-      ]
-    }
-  ];
-
-  // For macOS, adjust the menu structure
-  if (process.platform === 'darwin') {
-    template.unshift({
-      label: app.getName(),
-      submenu: [
-        {
-          label: 'About ' + app.getName(),
-          click: () => showAboutDialog()
-        },
-        { type: 'separator' },
-        {
-          label: 'Check for Updates...',
-          click: async () => {
-            if (autoUpdater) {
-              await autoUpdater.checkForUpdatesManually();
-            }
-          }
-        },
-        { type: 'separator' },
-        {
-          label: 'Hide ' + app.getName(),
-          accelerator: 'Command+H',
-          role: 'hide'
-        },
-        {
-          label: 'Hide Others',
-          accelerator: 'Command+Shift+H',
-          role: 'hideothers'
-        },
-        {
-          label: 'Show All',
-          role: 'unhide'
-        },
-        { type: 'separator' },
-        {
-          label: 'Quit',
-          accelerator: 'Command+Q',
-          click: () => app.quit()
-        }
-      ]
-    });
-  }
-
-  const menu = Menu.buildFromTemplate(template);
-  Menu.setApplicationMenu(menu);
+  // Hide the menu bar completely
+  Menu.setApplicationMenu(null);
 }
 
 function showAboutDialog() {
@@ -408,6 +326,33 @@ ipcMain.handle('show-save-dialog', async (event, options) => {
 ipcMain.handle('show-open-dialog', async (event, options) => {
   const result = await dialog.showOpenDialog(mainWindow, options);
   return result;
+});
+
+// Window control IPC handlers
+ipcMain.handle('window-minimize', () => {
+  if (mainWindow) {
+    mainWindow.minimize();
+  }
+});
+
+ipcMain.handle('window-maximize', () => {
+  if (mainWindow) {
+    if (mainWindow.isMaximized()) {
+      mainWindow.restore();
+    } else {
+      mainWindow.maximize();
+    }
+  }
+});
+
+ipcMain.handle('window-close', () => {
+  if (mainWindow) {
+    mainWindow.close();
+  }
+});
+
+ipcMain.handle('window-is-maximized', () => {
+  return mainWindow ? mainWindow.isMaximized() : false;
 });
 
 // Auto-updater IPC handlers
