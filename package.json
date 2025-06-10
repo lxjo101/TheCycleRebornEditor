@@ -1,6 +1,6 @@
 {
   "name": "cycle-frontier-save-editor",
-  "version": "2.0",
+  "version": "2.0.0",
   "description": "Desktop Save Editor for The Cycle: Reborn - Edit your inventory through MongoDB with automatic updates",
   "main": "main.js",
   "scripts": {
